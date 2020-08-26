@@ -11,7 +11,7 @@ public class Interaction {
     private String id;
     private Date interactionDate;// like lead
     private String leadId;
-    private String means;
+    private String mean;
     private Potential potential; //input 0 = NEGATIVE 1 = NEUTRAL 2 = POSITIVE
 
 }
