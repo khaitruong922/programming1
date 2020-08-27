@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -19,17 +20,36 @@ public class Database {
         fileWriter.close();
     }
 
-    public void displayAll() {
+    public void delete(String id) throws IOException {
+        StringBuffer sb = new StringBuffer();
+        File readFile = new File(fileName);
+        FileReader fileReader = new FileReader(readFile);
+        Scanner sc = new Scanner(fileReader);
+        while (sc.hasNextLine()) {
+            String row = sc.nextLine();
+            String[] data = row.split(",");
+            if (data[0].equals(id)) continue;
+            sb.append(row);
+            sb.append("\n");
+        }
+        FileWriter fileWriter = new FileWriter(fileName);
+        fileWriter.write(sb.toString());
+        fileWriter.close();
+    }
+
+    public String[] getAll() {
+        ArrayList<String> rows = new ArrayList<String>();
         File file = new File(fileName);
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
             while (sc.hasNextLine()) {
-                System.out.println(sc.next());
+                rows.add(sc.nextLine());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return rows.toArray(new String[rows.size()]);
     }
 
     public String getRow(String id) {
@@ -40,9 +60,7 @@ public class Database {
             while (sc.hasNextLine()) {
                 String row = sc.nextLine();
                 String[] data = row.split(",");
-                System.out.println(Arrays.toString(data));
                 if (data[0].equals(id)) {
-                    System.out.println("Found");
                     return row;
                 }
             }
