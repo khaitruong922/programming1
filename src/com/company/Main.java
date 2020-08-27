@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Menu.start();
 //        Database leadDatabase = new Database(Lead.fileName,Lead.idPrefix);
 //        Database interactionDatebase = new Database(Interaction.fileName,Interaction.idPrefix);
