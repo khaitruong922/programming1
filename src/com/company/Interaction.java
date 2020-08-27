@@ -72,13 +72,25 @@ public class Interaction implements IDatabaseEntity {
 
     @Override
     public String toString() {
-        return "Interaction{" +
-                "id='" + id + '\'' +
-                ", interactionDate=" + interactionDate +
-                ", leadId='" + leadId + '\'' +
-                ", mean='" + mean + '\'' +
-                ", potential=" + potential +
-                '}';
+    StringBuilder sb = new StringBuilder();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    sb.append("id: ");
+    sb.append(id);
+    sb.append("\n");
+    sb.append("interaction date: ");
+    sb.append(formatter.format(interactionDate));
+    sb.append("\n");
+    sb.append("leadId: ");
+    sb.append(leadId);
+    sb.append("\n");
+    sb.append("mean: ");
+    sb.append(mean);
+    sb.append("\n");
+    sb.append("potential: ");
+    sb.append(potential.toLowerCase());
+    sb.append("\n");
+
+        return sb.toString();
     }
     @Override
     public String toCSV() {
