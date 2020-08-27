@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        Menu.start();
         Database leadDatabase = new Database(Lead.fileName,Lead.idPrefix);
         Database interactionDatebase = new Database(Interaction.fileName,Interaction.idPrefix);
         String[] leads = leadDatabase.getAll();
