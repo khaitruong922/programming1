@@ -9,7 +9,7 @@ public class Menu {
         Database leadDatabase = new Database(Lead.fileName, Lead.idPrefix);
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
         String leftAlignFormat = "| %-15s | %-6s |%n";
-
+        String  displayAllFormat = "| %-23s |%n";
         System.out.format("+-----------------+--------+%n");
         System.out.format("| Access          | Inputs |%n");
         System.out.format("+-----------------+--------+%n");
@@ -32,7 +32,15 @@ public class Menu {
                 String input1 = sc.nextLine();
                 switch (input1) {
                     case "1":
-                        leadDatabase.getAll();
+                        System.out.format("+-----------------+--------+%n");
+                        System.out.format("| Tasks           | Inputs |%n");
+                        System.out.format("+-----------------+--------+%n");
+                        for (String leadString: leadDatabase.getAll()
+                             ) {
+                            System.out.format(displayAllFormat,leadString);
+                        }
+                        System.out.format("+-----------------+--------+%n");
+
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
