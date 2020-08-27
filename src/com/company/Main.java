@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.swing.text.DateFormatter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,5 +13,8 @@ public class Main {
         Lead lead = Lead.example;
         Database leadDatabase = new Database("leads.csv");
         leadDatabase.add(lead);
+        Interaction interaction = Interaction.example;
+        Database interactionDatabase = new Database("interactions.csv");
+        interactionDatabase.add(interaction);
     }
 }
