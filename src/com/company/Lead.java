@@ -1,5 +1,6 @@
 package com.company;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
@@ -93,7 +94,24 @@ public class Lead implements IDatabaseEntity {
 
     @Override
     public String toCSV() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        sb.append(id);
+        sb.append(",");
+        sb.append(name);
+        sb.append(",");
+        sb.append(formatter.format(birthDate));
+        sb.append(",");
+        sb.append(isMale);
+        sb.append(",");
+        sb.append(phone);
+        sb.append(",");
+        sb.append(email);
+        sb.append(",");
+        sb.append(address);
+        sb.append("\n");
+
+        return sb.toString();
     }
 }
 
