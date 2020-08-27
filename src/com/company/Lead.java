@@ -1,5 +1,6 @@
 package com.company;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,8 +10,8 @@ public class Lead implements IDatabaseEntity {
     public static String idPrefix = "lead";
     private String id;
     private String name;
-    private Date birthDate;//simple date format try catch
-    private boolean isMale;// ask type 0:female 1:male
+    private Date birthDate;
+    private boolean isMale;
     private String phone;
     private String email;
     private String address;
@@ -84,44 +85,56 @@ public class Lead implements IDatabaseEntity {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        sb.append("id: ");
+        sb.append("Lead ID: ");
         sb.append(id);
         sb.append("\n");
-        sb.append("name: ");
+        sb.append("Name: ");
         sb.append(name);
         sb.append("\n");
         sb.append("Date of birth: ");
-        sb.append(formatter.format(birthDate));
+        sb.append(birthDate.getTime());
         sb.append("\n");
-        sb.append("gender: ");
-        if (isMale){
-            sb.append("male");
-        }else {
-            sb.append("female");
-        }
+        sb.append("Gender: ");
+        sb.append(isMale ? "Male" : "Female");
         sb.append("\n");
-        sb.append("phone: ");
+        sb.append("Phone: ");
         sb.append(phone);
         sb.append("\n");
-        sb.append("email :");
+        sb.append("Email :");
         sb.append(email);
         sb.append("\n");
-        sb.append("address: ");
+        sb.append("Address: ");
         sb.append(address);
         sb.append("\n");
         return sb.toString();
     }
 
+    public static Lead fromCSV(String row) {
+        String[] data = row.split(",");
+        String id = data[0];
+        String name = data[1];
+        Date birthDate = null;
+        try {
+            birthDate = DateParser.stringToDate(data[2]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        boolean isMale = Boolean.parseBoolean(data[3]);
+        String phone = data[4];
+        String email = data[5];
+        String address = data[6];
+        return new Lead(id, name, birthDate, isMale, phone, email, address);
+
+    }
+
     @Override
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         sb.append(id);
         sb.append(",");
         sb.append(name);
         sb.append(",");
-        sb.append(formatter.format(birthDate));
+        sb.append(DateParser.dateToString(birthDate));
         sb.append(",");
         sb.append(isMale);
         sb.append(",");
