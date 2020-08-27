@@ -11,10 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Hello World");
         Lead lead = Lead.example;
-        Database leadDatabase = new Database("leads.csv");
-        leadDatabase.add(lead);
-        Interaction interaction = Interaction.example;
-        Database interactionDatabase = new Database("interactions.csv");
-        interactionDatabase.add(interaction);
+        Database leadDatabase = new Database("leads.csv",Lead.idPrefix);
+        System.out.println(leadDatabase.getNextId());
     }
 }
