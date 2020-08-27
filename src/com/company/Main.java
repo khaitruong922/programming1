@@ -13,8 +13,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Hello World");
         Lead lead = Lead.example;
+        Interaction interaction = Interaction.example;
         Database leadDatabase = new Database("leads.csv",Lead.idPrefix);
         Database interactionDatabase = new Database("interactions.csv",Interaction.idPrefix);
+        System.out.println(lead.toString());
+        System.out.println(interaction.toString());
         System.out.println(leadDatabase.getNextId());
         System.out.println("task:    access leads    access interactions");
         System.out.println("input:         1                2");

@@ -83,12 +83,31 @@ public class Lead implements IDatabaseEntity {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        sb.append("id: ");
         sb.append(id);
-        sb.append(",");
+        sb.append("\n");
+        sb.append("name: ");
         sb.append(name);
-        sb.append(",");
-        sb.append(isMale);
-        sb.append(",");
+        sb.append("\n");
+        sb.append("Date of birth: ");
+        sb.append(formatter.format(birthDate));
+        sb.append("\n");
+        sb.append("gender: ");
+        if (isMale){
+            sb.append("male");
+        }else {
+            sb.append("female");
+        }
+        sb.append("\n");
+        sb.append("phone: ");
+        sb.append(phone);
+        sb.append("\n");
+        sb.append("email :");
+        sb.append(email);
+        sb.append("\n");
+        sb.append("address: ");
+        sb.append(address);
         sb.append("\n");
         return sb.toString();
     }
