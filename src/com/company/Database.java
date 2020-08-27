@@ -18,26 +18,23 @@ public class Database {
         fileWriter.write(databaseEntity.toCSV());
         fileWriter.close();
     }
+
     public void delete(String id) throws IOException {
         String tempFileName = "temp.csv";
-        FileWriter fileWriter = new FileWriter(tempFileName, true);
-        File tempFile = new File("temp.csv");
+        FileWriter fileWriter = new FileWriter(tempFileName);
+        File tempFile = new File(tempFileName);
         File readFile = new File(fileName);
-        try {
-            FileReader fileReader = new FileReader(readFile);
-            Scanner sc = new Scanner(fileReader);
-            while (sc.hasNextLine()) {
-                String row = sc.nextLine();
-                String[] data = row.split(",");
-                if (data[0].equals(id)) continue;
-                fileWriter.write(row);
-            }
-            fileWriter.close();
-            tempFile.renameTo(readFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        FileReader fileReader = new FileReader(readFile);
+        Scanner sc = new Scanner(fileReader);
+        while (sc.hasNextLine()) {
+            String row = sc.nextLine();
+            String[] data = row.split(",");
+            if (data[0].equals(id)) continue;
+            fileWriter.write(row);
         }
-
+        fileWriter.close();
+        boolean success = tempFile.renameTo(readFile);
+        System.out.println(success);
     }
 
     public void displayAll() {
@@ -46,7 +43,7 @@ public class Database {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
             while (sc.hasNextLine()) {
-                System.out.println(sc.next());
+                System.out.println(sc.nextLine());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
