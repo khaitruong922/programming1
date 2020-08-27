@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Interaction implements IDatabaseEntity {
-    public static Interaction example = new Interaction("001",new Date(),"001","facebook",Potential.NEGATIVE);
-
+    public static Interaction example = new Interaction("inter_001",new Date(),"001","facebook",Potential.NEGATIVE);
+    public static String idPrefix = "inter";
     private enum Potential{
         NEGATIVE,
         NEUTRAL,

@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
-    public static Lead example = new Lead("001", "Khai", new Date(), true, "090", "abc@a.com", "address");
+    public static Lead example = new Lead("lead_001", "Khai", new Date(), true, "090", "abc@a.com", "address");
+    public static String idPrefix = "lead";
     private String id;
     private String name;
     private Date birthDate;//simple date format try catch

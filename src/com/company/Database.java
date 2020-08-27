@@ -6,9 +6,11 @@ import java.util.Scanner;
 
 public class Database {
     private String fileName;
+    private String idPrefix;
 
-    public Database(String fileName) {
+    public Database(String fileName, String idPrefix) {
         this.fileName = fileName;
+        this.idPrefix = idPrefix;
     }
 
     public void add(IDatabaseEntity databaseEntity) throws IOException {
@@ -36,7 +38,7 @@ public class Database {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
             while (sc.hasNextLine()) {
-                String row = sc.next();
+                String row = sc.nextLine();
                 String[] data = row.split(",");
                 System.out.println(Arrays.toString(data));
                 if (data[0].equals(id)) {
@@ -49,5 +51,34 @@ public class Database {
             e.printStackTrace();
             return "An error occured";
         }
+    }
+
+    public String getLastRow() {
+        File file = new File(fileName);
+        try {
+            FileReader fileReader = new FileReader(file);
+            Scanner sc = new Scanner(fileReader);
+            String lastRow = "";
+            while (sc.hasNextLine()) {
+                lastRow = sc.nextLine();
+            }
+            return lastRow;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return "An error occured";
+        }
+    }
+
+    public String getNextId() {
+        String lastRow = getLastRow();
+        String idSeparator = "_";
+        if (lastRow.length() == 0) {
+            return idPrefix + idSeparator + "001";
+        }
+        String id = lastRow.split(",")[0];
+        String[] idData = id.split(idSeparator);
+        String number = idData[1];
+        int nextNumber = Integer.parseInt(number) + 1;
+        return idPrefix + idSeparator + String.format("%03d", nextNumber);
     }
 }
