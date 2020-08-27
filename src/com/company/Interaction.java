@@ -2,7 +2,12 @@ package com.company;
 
 import java.util.Date;
 
-public class Interaction {
+public class Interaction implements IDatabaseEntity {
+    @Override
+    public String toCSV() {
+        return null;
+    }
+
     private enum Potential{
         NEGATIVE,
         NEUTRAL,
