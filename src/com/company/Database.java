@@ -20,9 +20,7 @@ public class Database {
     }
 
     public void delete(String id) throws IOException {
-        String tempFileName = "temp.csv";
-        FileWriter fileWriter = new FileWriter(tempFileName);
-        File tempFile = new File(tempFileName);
+        StringBuffer sb = new StringBuffer();
         File readFile = new File(fileName);
         FileReader fileReader = new FileReader(readFile);
         Scanner sc = new Scanner(fileReader);
@@ -30,11 +28,12 @@ public class Database {
             String row = sc.nextLine();
             String[] data = row.split(",");
             if (data[0].equals(id)) continue;
-            fileWriter.write(row);
+            sb.append(row);
+            sb.append("\n");
         }
+        FileWriter fileWriter = new FileWriter(fileName);
+        fileWriter.write(sb.toString());
         fileWriter.close();
-        boolean success = tempFile.renameTo(readFile);
-        System.out.println(success);
     }
 
     public void displayAll() {
