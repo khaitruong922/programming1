@@ -4,17 +4,8 @@ import java.util.Scanner;
 
 public class Menu {
     public static void start() {
-        Lead lead = Lead.example;
-        Interaction interaction = Interaction.example;
         Database leadDatabase = new Database(Lead.fileName, Lead.idPrefix);
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
-<<<<<<< Updated upstream
-        System.out.println(lead.toString());
-        System.out.println(interaction.toString());
-        System.out.println(leadDatabase.getNextId());
-        System.out.println("task:    access leads    access interactions");
-        System.out.println("input:         1                2");
-=======
         String[] leads = leadDatabase.getAll();
         String[] interactions = interactionDatabase.getAll();
         //all format
@@ -25,30 +16,21 @@ public class Menu {
         System.out.format("+-----------------+--------+%n");
         System.out.format("| Access          | Inputs |%n");
         System.out.format("+-----------------+--------+%n");
-        System.out.format(leftAlignFormat, "leads", "1");
-        System.out.format(leftAlignFormat, "interactions", "2");
+        System.out.format(leftAlignFormat, "leads" , "1" );
+        System.out.format(leftAlignFormat, "interactions", "2" );
         System.out.format("+-----------------+--------+%n");
 
->>>>>>> Stashed changes
         Scanner sc = new Scanner(System.in);
+
         String input = sc.nextLine();
         switch (input) {
-<<<<<<< Updated upstream
-            case "1":
-                System.out.println("task for leads:        display_all    find_lead    add_lead");
-                System.out.println("input:                      1              2           3");
-                String input1 = sc.nextLine();
-                switch (input1) {
-                    case "1":
-                        leadDatabase.getAll();
-=======
             case "1"://lead
                 System.out.format("+-----------------+--------+%n");
                 System.out.format("| Tasks           | Inputs |%n");
                 System.out.format("+-----------------+--------+%n");
-                System.out.format(leftAlignFormat, "Display_all", "1");
-                System.out.format(leftAlignFormat, "Find by ID", "2");
-                System.out.format(leftAlignFormat, "Add_lead", "3");
+                System.out.format(leftAlignFormat, "Display_all" , "1" );
+                System.out.format(leftAlignFormat, "Find by ID" , "2" );
+                System.out.format(leftAlignFormat, "Add_lead" , "3" );
                 System.out.format("+-----------------+--------+%n");
                 String input1 = sc.nextLine();
                 switch (input1) {
@@ -58,19 +40,10 @@ public class Menu {
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
                         for (int i = 0; i < leads.length; i++) {
                             Lead lead = Lead.fromCSV(leads[i]);
-                            System.out.format(
-                                    displayAllFormatLead,
-                                    lead.getId(),
-                                    lead.getName(),
-                                    DateParser.dateToString(lead.getBirthDate()),
-                                    lead.isMale() ? "Male" : "Female",
-                                    lead.getPhone(),
-                                    lead.getEmail(),
-                                    lead.getAddress());
+                            System.out.format(displayAllFormatLead,lead.getId(),lead.getName(),lead.getBirthDate(),lead.isMale(),lead.getPhone(),lead.getEmail(),lead.getAddress());
                         }
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
 
->>>>>>> Stashed changes
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
@@ -82,22 +55,13 @@ public class Menu {
                         break;
                 }
                 break;
-<<<<<<< Updated upstream
-            case "2":
-                System.out.println("task for interactions:    display_all      find_interactions      add_interactions");
-                System.out.println("input:                         1                  2                     3");
-                String input2 = sc.nextLine();
-                switch (input2) {
-                    case "1":
-                        interactionDatabase.getAll();
-=======
             case "2"://interaction
                 System.out.format("+-----------------+--------+%n");
                 System.out.format("| Tasks           | Inputs |%n");
                 System.out.format("+-----------------+--------+%n");
-                System.out.format(leftAlignFormat, "Display all", "1");
-                System.out.format(leftAlignFormat, "Find by ID", "2");
-                System.out.format(leftAlignFormat, "Add interaction", "3");
+                System.out.format(leftAlignFormat, "Display all" , "1" );
+                System.out.format(leftAlignFormat, "Find by ID" , "2" );
+                System.out.format(leftAlignFormat, "Add interaction" , "3" );
                 System.out.format("+-----------------+--------+%n");
                 String input2 = sc.nextLine();
                 switch (input2) {
@@ -107,16 +71,9 @@ public class Menu {
                         System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
                         for (int i = 0; i < interactions.length; i++) {
                             Interaction interaction = Interaction.fromCSV(interactions[i]);
-                            System.out.format(
-                                    displayAllFormatInteraction,
-                                    interaction.getId(),
-                                    DateParser.dateToString(interaction.getInteractionDate()),
-                                    interaction.getLeadId(),
-                                    interaction.getMean(),
-                                    interaction.getPotential());
+                            System.out.format(displayAllFormatInteraction,interaction.getId(),interaction.getInteractionDate(),interaction.getLeadId(),interaction.getMean(),interaction.getPotential());
                         }
                         System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
->>>>>>> Stashed changes
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
