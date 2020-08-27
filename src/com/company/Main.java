@@ -14,8 +14,8 @@ public class Main {
         System.out.println("Hello World");
         Lead lead = Lead.example;
         Interaction interaction = Interaction.example;
-        Database leadDatabase = new Database("leads.csv",Lead.idPrefix);
-        Database interactionDatabase = new Database("interactions.csv",Interaction.idPrefix);
+        Database leadDatabase = new Database(Lead.fileName,Lead.idPrefix);
+        Database interactionDatabase = new Database(Interaction.fileName,Interaction.idPrefix);
         System.out.println(lead.toString());
         System.out.println(interaction.toString());
         System.out.println(leadDatabase.getNextId());
@@ -30,7 +30,7 @@ public class Main {
                 String input1 = sc.nextLine();
                 switch (input1){
                     case "1":
-                        leadDatabase.displayAll();
+                        leadDatabase.getAll();
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
@@ -48,7 +48,7 @@ public class Main {
                 String input2 = sc.nextLine();
                 switch (input2){
                     case "1":
-                        interactionDatabase.displayAll();
+                        interactionDatabase.getAll();
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
