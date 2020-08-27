@@ -12,6 +12,7 @@ public class Main {
         System.out.println("Hello World");
         Lead lead = Lead.example;
         Database leadDatabase = new Database("leads.csv",Lead.idPrefix);
+        leadDatabase.delete("lead_001");
         System.out.println(leadDatabase.getNextId());
     }
 }
