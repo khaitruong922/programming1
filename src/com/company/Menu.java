@@ -8,17 +8,27 @@ public class Menu {
         Interaction interaction = Interaction.example;
         Database leadDatabase = new Database(Lead.fileName, Lead.idPrefix);
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
-        System.out.println(lead.toString());
-        System.out.println(interaction.toString());
-        System.out.println(leadDatabase.getNextId());
-        System.out.println("task:    access leads    access interactions");
-        System.out.println("input:         1                2");
+        String leftAlignFormat = "| %-15s | %-6s |%n";
+
+        System.out.format("+-----------------+--------+%n");
+        System.out.format("| Access          | Inputs |%n");
+        System.out.format("+-----------------+--------+%n");
+        System.out.format(leftAlignFormat, "leads" , "1" );
+        System.out.format(leftAlignFormat, "interactions", "2" );
+        System.out.format("+-----------------+--------+%n");
+
         Scanner sc = new Scanner(System.in);
+
         String input = sc.nextLine();
         switch (input) {
             case "1":
-                System.out.println("task for leads:        display_all    find_lead    add_lead");
-                System.out.println("input:                      1              2           3");
+                System.out.format("+-----------------+--------+%n");
+                System.out.format("| Tasks           | Inputs |%n");
+                System.out.format("+-----------------+--------+%n");
+                System.out.format(leftAlignFormat, "Display_all" , "1" );
+                System.out.format(leftAlignFormat, "Find by ID" , "2" );
+                System.out.format(leftAlignFormat, "Add_lead" , "3" );
+                System.out.format("+-----------------+--------+%n");
                 String input1 = sc.nextLine();
                 switch (input1) {
                     case "1":
@@ -35,8 +45,13 @@ public class Menu {
                 }
                 break;
             case "2":
-                System.out.println("task for interactions:    display_all      find_interactions      add_interactions");
-                System.out.println("input:                         1                  2                     3");
+                System.out.format("+-----------------+--------+%n");
+                System.out.format("| Tasks           | Inputs |%n");
+                System.out.format("+-----------------+--------+%n");
+                System.out.format(leftAlignFormat, "Display all" , "1" );
+                System.out.format(leftAlignFormat, "Find by ID" , "2" );
+                System.out.format(leftAlignFormat, "Add interaction" , "3" );
+                System.out.format("+-----------------+--------+%n");
                 String input2 = sc.nextLine();
                 switch (input2) {
                     case "1":
