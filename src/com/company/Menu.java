@@ -8,8 +8,11 @@ public class Menu {
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
         String[] leads = leadDatabase.getAll();
         String[] interactions = interactionDatabase.getAll();
+        //all format
         String leftAlignFormat = "| %-15s | %-6s |%n";
-        String  displayAllFormat = "| %-7s | %-8s | %-14s | %-6s | %-13s | %-17s | %-23s |%n";
+        String displayAllFormatLead = "| %-7s | %-8s | %-14s | %-6s | %-13s | %-17s | %-23s |%n";
+        String displayAllFormatInteraction = "| %-15s | %-30s | %-8s | %-12s | %-9s |%n";
+
         System.out.format("+-----------------+--------+%n");
         System.out.format("| Access          | Inputs |%n");
         System.out.format("+-----------------+--------+%n");
@@ -37,7 +40,7 @@ public class Menu {
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
                         for (int i = 0; i < leads.length; i++) {
                             Lead lead = Lead.fromCSV(leads[i]);
-                            System.out.format(displayAllFormat,lead.getId(),lead.getName(),lead.getBirthDate(),lead.isMale(),lead.getPhone(),lead.getEmail(),lead.getAddress());
+                            System.out.format(displayAllFormatLead,lead.getId(),lead.getName(),lead.getBirthDate(),lead.isMale(),lead.getPhone(),lead.getEmail(),lead.getAddress());
                         }
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
 
@@ -62,11 +65,15 @@ public class Menu {
                 System.out.format("+-----------------+--------+%n");
                 String input2 = sc.nextLine();
                 switch (input2) {
-                    case "1":
+                    case "1": // interaction display all
+                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");// 17 18 10 10 11
+                        System.out.format("| Interaction ID  |        Interaction Date        | Lead ID  |     Mean     | Potential |%n");
+                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
                         for (int i = 0; i < interactions.length; i++) {
                             Interaction interaction = Interaction.fromCSV(interactions[i]);
-                            System.out.println(interaction.toString());
+                            System.out.format(displayAllFormatInteraction,interaction.getId(),interaction.getInteractionDate(),interaction.getLeadId(),interaction.getMean(),interaction.getPotential());
                         }
+                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
