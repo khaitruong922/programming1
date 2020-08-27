@@ -93,7 +93,7 @@ public class Lead implements IDatabaseEntity {
 
     @Override
     public String toCSV() {
-        return null;
+        return "Hello";
     }
 }
 
