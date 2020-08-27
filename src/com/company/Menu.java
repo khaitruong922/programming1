@@ -10,7 +10,7 @@ public class Menu {
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
         String[] leads = leadDatabase.getAll();
         String[] interactions = interactionDatabase.getAll();
-        Boolean valid ;
+        Boolean valid;
         Boolean gender;
         //all format
         String leftAlignFormat = "| %-15s | %-6s |%n";
@@ -44,7 +44,7 @@ public class Menu {
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
                         for (int i = 0; i < leads.length; i++) {
                             Lead lead = Lead.fromCSV(leads[i]);
-                            System.out.format(displayAllFormatLead, lead.getId(), lead.getName(), lead.getBirthDate(), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
+                            System.out.format(displayAllFormatLead, lead.getId(), lead.getName(),DateParser.dateToString(lead.getBirthDate()), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
                         }
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
 
