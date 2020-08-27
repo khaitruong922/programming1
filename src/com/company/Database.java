@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -36,17 +37,19 @@ public class Database {
         fileWriter.close();
     }
 
-    public void displayAll() {
+    public String[] getAll() {
+        ArrayList<String> rows = new ArrayList<String>();
         File file = new File(fileName);
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
             while (sc.hasNextLine()) {
-                System.out.println(sc.nextLine());
+                rows.add(sc.nextLine());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return rows.toArray(new String[rows.size()]);
     }
 
     public String getRow(String id) {
