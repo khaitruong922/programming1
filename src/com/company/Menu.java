@@ -156,14 +156,17 @@ public class Menu {
                                     interaction.getPotential());
                         }
                         System.out.format(borderForDisplayAllInteraction);
+                        Menu.start();
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
                         String inputIdInteraction = sc.nextLine();
                         System.out.println(interactionDatabase.getRow("inter_" + inputIdInteraction));
+                        Menu.start();
                         break;
                     case "3":
                         System.out.println("");
+                        Menu.start();
                         break;
                 }
                 break;
