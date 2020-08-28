@@ -1,6 +1,5 @@
 package com.company;
 
-import javax.swing.text.DateFormatter;
 import java.text.ParseException;
 import java.util.Scanner;
 
@@ -12,11 +11,34 @@ public class Menu {
         String[] interactions = interactionDatabase.getAll();
         Boolean valid;
         Boolean gender;
+        //finding the largest world for each lead's element
+        int fLeadId = 0, fName = 0, fBirthday = 0, fPhone = 0, fEmail = 0, fAddress = 0;
+        for (int i = 0; i < leads.length; i++) {
+            Lead lead = Lead.fromCSV(leads[i]);
+            if (fLeadId < lead.getId().length()) {
+                fLeadId = lead.getId().length();
+            }
+            if (fName < lead.getName().length()) {
+                fName = lead.getName().length();
+            }
+            if (fBirthday < DateParser.dateToString(lead.getBirthDate()).length()) {
+                fBirthday = DateParser.dateToString(lead.getBirthDate()).length();
+            }
+            if (fPhone < lead.getPhone().length()) {
+                fPhone = lead.getPhone().length();
+            }
+            if (fEmail < lead.getEmail().length()) {
+                fEmail = lead.getEmail().length();
+            }
+            if (fAddress < lead.getAddress().length()) {
+                fAddress = lead.getAddress().length();
+            }
+        }
+
         //all format
         String leftAlignFormat = "| %-15s | %-6s |%n";
-        String displayAllFormatLead = "| %-7s | %-8s | %-14s | %-6s | %-13s | %-17s | %-23s |%n";
+        String displayAllFormatLead = "| %-" + fLeadId + "s | %-"+ fName +"s | %-"+ fBirthday +"s | %-6s | %-"+ fPhone +"s | %-"+ fEmail +"s | %-"+ fAddress +"s |%n";
         String displayAllFormatInteraction = "| %-15s | %-30s | %-8s | %-12s | %-9s |%n";
-
         System.out.format("+-----------------+--------+%n");
         System.out.format("| Access          | Inputs |%n");
         System.out.format("+-----------------+--------+%n");
@@ -39,14 +61,15 @@ public class Menu {
                 String input1 = sc.nextLine();
                 switch (input1) {
                     case "1"://lead display all
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
-                        System.out.format("| Lead ID  |   Name   |          Birth Date          | Gender |     Phone     |       Email       |         Address         |%n");
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
+                        String borderForDisplayAllLead = String.format(displayAllFormatLead,"","","","","","","").replace(" ","-").replace("|","+");
+                        System.out.print(borderForDisplayAllLead);
+                        System.out.format(displayAllFormatLead,"Lead ID", "Name", "Birth Date","Gender","Phone","Email","Address");
+                        System.out.print(borderForDisplayAllLead);
                         for (int i = 0; i < leads.length; i++) {
                             Lead lead = Lead.fromCSV(leads[i]);
-                            System.out.format(displayAllFormatLead, lead.getId(), lead.getName(),DateParser.dateToString(lead.getBirthDate()), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
+                            System.out.format(displayAllFormatLead, lead.getId(), lead.getName(), DateParser.dateToString(lead.getBirthDate()), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
                         }
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
+                        System.out.print(borderForDisplayAllLead);
 
                         break;
                     case "2"://lead find by ID
