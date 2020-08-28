@@ -1,6 +1,10 @@
 package com.company;
 
+
+import javax.swing.text.DateFormatter;
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Menu {
@@ -79,17 +83,28 @@ public class Menu {
                         break;
                     case "3"://lead add
                         System.out.println("Adding a lead");
-                        System.out.print("Lead ID                       | ");
-                        String leadID1 = sc.nextLine();
                         System.out.print("Name                          | ");
                         String name = sc.nextLine();
-                        System.out.print("Birth Date(year-month-day)    | ");
-                        String bDate = sc.nextLine();
+                        Date birthDate = null;
+                        boolean valid = true;
                         do {
-                            System.out.print("Gender                        | ");
-                            String temp = sc.nextLine();
-                            valid = (temp.equals("male") || temp.equals("female"));
-                            gender = temp.equals("male");
+                            try {
+                                System.out.print("Birth Date (YYYY-MM-DD)    | ");
+                                String birthDateString = sc.nextLine();
+                                birthDate = DateParser.stringToDate(birthDateString);
+                            } catch (ParseException e) {
+                                System.out.println("Invalid format. Please try again.");
+                            }
+                        } while (birthDate == null);
+                        boolean isMale = false;
+                        do {
+                            if(!valid){
+                                System.out.println("Invalid input. Please type 0 for female and 1 for male.");
+                            }
+                            System.out.print("Gender (0: female, 1: male)                | ");
+                            String choice = sc.nextLine();
+                            valid = (choice.equals("0") || choice.equals("1"));
+                            isMale = choice.equals("1");
                         } while (!valid);
 
                         System.out.print("Phone                         | ");
@@ -98,8 +113,14 @@ public class Menu {
                         String email = sc.nextLine();
                         System.out.print("Address                       | ");
                         String address = sc.nextLine();
-                        Lead addLead = new Lead(leadID1, name, DateParser.stringToDate(bDate), gender, phone, email, address);
-                        leadDatabase.add(addLead);
+                        Lead addLead = new Lead(leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
+                        try {
+                            leadDatabase.add(addLead);
+                            System.out.println("Lead added successfully");
+                        } catch (IOException e) {
+                            System.out.println("Error occured when trying to add a lead.");
+                            e.printStackTrace();
+                        }
                         break;
                 }
                 break;
