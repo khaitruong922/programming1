@@ -7,11 +7,9 @@ import java.util.Scanner;
 
 public class Database {
     private String fileName;
-    private String idPrefix;
 
-    public Database(String fileName, String idPrefix) {
+    public Database(String fileName) {
         this.fileName = fileName;
-        this.idPrefix = idPrefix;
     }
 
     public void add(IDatabaseEntity databaseEntity) throws IOException {
@@ -21,19 +19,15 @@ public class Database {
     }
 
     public void delete(String id) throws IOException {
-        StringBuffer sb = new StringBuffer();
-        File readFile = new File(fileName);
-        FileReader fileReader = new FileReader(readFile);
-        Scanner sc = new Scanner(fileReader);
-        while (sc.hasNextLine()) {
-            String row = sc.nextLine();
-            String[] data = row.split(",");
-            if (data[0].equals(id)) continue;
-            sb.append(row);
-            sb.append("\n");
-        }
+        String[] rows = getAll();
         FileWriter fileWriter = new FileWriter(fileName);
-        fileWriter.write(sb.toString());
+        for (int i = 0; i < rows.length; i++) {
+            String row = rows[i];
+            String rowId = row.split(",")[0];
+            if (rowId.equals(id)) continue;
+            fileWriter.write(row);
+            fileWriter.write("\n");
+        }
         fileWriter.close();
     }
 
@@ -91,12 +85,12 @@ public class Database {
         String lastRow = getLastRow();
         String idSeparator = "_";
         if (lastRow.length() == 0) {
-            return idPrefix + idSeparator + "001";
+            return "001";
         }
         String id = lastRow.split(",")[0];
         String[] idData = id.split(idSeparator);
         String number = idData[1];
         int nextNumber = Integer.parseInt(number) + 1;
-        return idPrefix + idSeparator + String.format("%03d", nextNumber);
+        return String.format("%03d", nextNumber);
     }
 }
