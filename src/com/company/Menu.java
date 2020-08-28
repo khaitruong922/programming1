@@ -12,8 +12,6 @@ public class Menu {
         Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
         String[] leads = leadDatabase.getAll();
         String[] interactions = interactionDatabase.getAll();
-        Boolean valid;
-        Boolean gender;
         //finding the largest world for each lead's element
         int fLeadId = 0, fName = 0, fBirthday = 0, fPhone = 0, fEmail = 0, fAddress = 0;
         for (int i = 0; i < leads.length; i++) {
@@ -73,7 +71,7 @@ public class Menu {
                             System.out.format(displayAllFormatLead, lead.getId(), lead.getName(), DateParser.dateToString(lead.getBirthDate()), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
                         }
                         System.out.print(borderForDisplayAllLead);
-
+                        Menu.start();
                         break;
                     case "2"://lead find by ID
                         System.out.println("which id are you looking for?");
