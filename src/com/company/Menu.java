@@ -7,14 +7,27 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class Menu {
-    public static void start() {
-        Database leadDatabase = new Database(Lead.fileName, Lead.idPrefix);
-        Database interactionDatabase = new Database(Interaction.fileName, Interaction.idPrefix);
+    public static void start() throws Exception {
+        Database leadDatabase = new Database(Lead.fileName);
+        Database interactionDatabase = new Database(Interaction.fileName);
         String[] leads = leadDatabase.getAll();
         String[] interactions = interactionDatabase.getAll();
+
+        //finding longest string for each lead's element
+        int fLeadId = 0, fName = 0, fBirthday = 0, fPhone = 0, fEmail = 0, fAddress = 0;
+        for (int i = 0; i < leads.length; i++) {
+            Lead lead = Lead.fromCSV(leads[i]);
+            fLeadId = Math.max(fLeadId, lead.getId().length());
+            fName = Math.max(fName, lead.getName().length());
+            fBirthday = Math.max(fBirthday, DateParser.dateToString(lead.getBirthDate()).length());
+            fPhone = Math.max(fPhone, lead.getPhone().length());
+            fEmail = Math.max(fEmail, lead.getEmail().length());
+            fAddress = Math.max(fAddress, lead.getAddress().length());
+        }
+
         //all format
         String leftAlignFormat = "| %-15s | %-6s |%n";
-        String displayAllFormatLead = "| %-7s | %-8s | %-14s | %-6s | %-13s | %-17s | %-23s |%n";
+        String displayAllFormatLead = "| %-" + fLeadId + "s | %-" + fName + "s | %-" + fBirthday + "s | %-6s | %-" + fPhone + "s | %-" + fEmail + "s | %-" + fAddress + "s |%n";
         String displayAllFormatInteraction = "| %-15s | %-30s | %-8s | %-12s | %-9s |%n";
 
         System.out.format("+-----------------+--------+%n");
@@ -39,12 +52,21 @@ public class Menu {
                 String input1 = sc.nextLine();
                 switch (input1) {
                     case "1"://lead display all
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
-                        System.out.format("| Lead ID  |   Name   |          Birth Date          | Gender |     Phone     |       Email       |         Address         |%n");
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
+                        String borderForDisplayAllLead = String.format(displayAllFormatLead, "", "", "", "", "", "", "").replace(" ", "-").replace("|", "+");
+                        System.out.print(borderForDisplayAllLead);
+                        System.out.format(displayAllFormatLead, "Lead ID", "Name", "Birth Date", "Gender", "Phone", "Email", "Address");
+                        System.out.print(borderForDisplayAllLead);
                         for (int i = 0; i < leads.length; i++) {
                             Lead lead = Lead.fromCSV(leads[i]);
-                            System.out.format(displayAllFormatLead, lead.getId(), lead.getName(), DateParser.dateToString(lead.getBirthDate()), lead.isMale(), lead.getPhone(), lead.getEmail(), lead.getAddress());
+                            System.out.format(
+                                    displayAllFormatLead,
+                                    lead.getId(),
+                                    lead.getName(),
+                                    DateParser.dateToString(lead.getBirthDate()),
+                                    lead.isMale() ? "Male" : "Female",
+                                    lead.getPhone(),
+                                    lead.getEmail(),
+                                    lead.getAddress());
                         }
                         System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
 
@@ -71,7 +93,7 @@ public class Menu {
                         } while (birthDate == null);
                         boolean isMale = false;
                         do {
-                            if(!valid){
+                            if (!valid) {
                                 System.out.println("Invalid input. Please type 0 for female and 1 for male.");
                             }
                             System.out.print("Gender (0: female, 1: male)                | ");
@@ -86,7 +108,7 @@ public class Menu {
                         String email = sc.nextLine();
                         System.out.print("Address                       | ");
                         String address = sc.nextLine();
-                        Lead addLead = new Lead(leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
+                        Lead addLead = new Lead(Lead.idPrefix + leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
                         try {
                             leadDatabase.add(addLead);
                             System.out.println("Lead added successfully");
@@ -113,7 +135,13 @@ public class Menu {
                         System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
                         for (int i = 0; i < interactions.length; i++) {
                             Interaction interaction = Interaction.fromCSV(interactions[i]);
-                            System.out.format(displayAllFormatInteraction,interaction.getId(),interaction.getInteractionDate(),interaction.getLeadId(),interaction.getMean(),interaction.getPotential());
+                            System.out.format(
+                                    displayAllFormatInteraction,
+                                    interaction.getId(),
+                                    DateParser.dateToString(interaction.getInteractionDate()),
+                                    interaction.getLeadId(),
+                                    interaction.getMean(),
+                                    interaction.getPotential());
                         }
                         System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
                         break;
