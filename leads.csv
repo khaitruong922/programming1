@@ -1,5 +1,5 @@
-
 lead_007,Khai,2001-09-22,true,0908321238,khai,khai
-lead_008,Khai,2222-01-02,true,0908321238,s3818074@rmit.edu.vn,my address
-lead_009,something,0029-05-14,false,02,2,2
-lead_010,1,0022-01-01,false,0908321238,a@a.com,b
+lead_008,a,2222-01-02,true,0908321238,s3818074@rmit.edu.vn,my address
+lead_009,a,0029-05-14,false,02,2,2
+lead_010,a,0022-01-01,false,0908321238,a@a.com,b
+lead_011,Khai,2209-01-01,true,,,

@@ -7,11 +7,9 @@ import java.util.Scanner;
 
 public class Database {
     private String fileName;
-    private String idPrefix;
 
-    public Database(String fileName, String idPrefix) {
+    public Database(String fileName) {
         this.fileName = fileName;
-        this.idPrefix = idPrefix;
     }
 
     public void add(IDatabaseEntity databaseEntity) throws IOException {
@@ -91,12 +89,12 @@ public class Database {
         String lastRow = getLastRow();
         String idSeparator = "_";
         if (lastRow.length() == 0) {
-            return idPrefix + idSeparator + "001";
+            return "001";
         }
         String id = lastRow.split(",")[0];
         String[] idData = id.split(idSeparator);
         String number = idData[1];
         int nextNumber = Integer.parseInt(number) + 1;
-        return idPrefix + idSeparator + String.format("%03d", nextNumber);
+        return String.format("%03d", nextNumber);
     }
 }
