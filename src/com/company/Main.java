@@ -12,5 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Menu.start();
+//        Database leadDatabase = new Database(Lead.fileName);
+//        leadDatabase.delete("lead_010");
     }
 }
