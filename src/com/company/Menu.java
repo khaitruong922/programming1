@@ -46,6 +46,7 @@ public class Menu {
         System.out.format("+-----------------+--------+%n");
         System.out.format(leftAlignFormat, "leads" , "1" );
         System.out.format(leftAlignFormat, "interactions", "2" );
+        System.out.format(leftAlignFormat, "Exit", "3" );
         System.out.format("+-----------------+--------+%n");
 
         Scanner sc = new Scanner(System.in);
