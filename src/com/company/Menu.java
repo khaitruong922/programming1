@@ -24,17 +24,29 @@ public class Menu {
             fEmail = Math.max(fEmail, lead.getEmail().length());
             fAddress = Math.max(fAddress, lead.getAddress().length());
         }
+        //find longest string for each interaction's element
+        int fInteractionID = 0, fInteractionDate = 0, fInteractionLeadID = 0, fMean = 0; //potential = 9
+        for (int i = 0; i < interactions.length; i++) {
+            Interaction interaction = Interaction.fromCSV(interactions[i]);
+            fInteractionID = Math.max(Math.max(fInteractionID, interaction.getId().length()),"Interaction ID".length());
+            fInteractionDate = Math.max(Math.max(fInteractionDate, DateParser.dateToString(interaction.getInteractionDate()).length()),"Interaction Date".length());
+            fInteractionLeadID = Math.max(fInteractionLeadID, interaction.getLeadId().length());
+            fMean = Math.max(Math.max(fMean, interaction.getMean().length()),"Lead ID".length());
+        }
 
         //all format
         String leftAlignFormat = "| %-15s | %-6s |%n";
         String displayAllFormatLead = "| %-" + fLeadId + "s | %-" + fName + "s | %-" + fBirthday + "s | %-6s | %-" + fPhone + "s | %-" + fEmail + "s | %-" + fAddress + "s |%n";
-        String displayAllFormatInteraction = "| %-15s | %-30s | %-8s | %-12s | %-9s |%n";
+        String displayAllFormatInteraction = "| %-"+ fInteractionID +"s | %-"+ fInteractionDate +"s | %-"+ fInteractionLeadID +"s | %-"+ fMean +"s | %-9s |%n";
+        String borderForDisplayAllLead = String.format(displayAllFormatLead, "", "", "", "", "", "", "").replace(" ", "-").replace("|", "+");
+        String borderForDisplayAllInteraction = String.format(displayAllFormatInteraction, "", "", "", "", "").replace(" ", "-").replace("|", "+");
 
         System.out.format("+-----------------+--------+%n");
         System.out.format("| Access          | Inputs |%n");
         System.out.format("+-----------------+--------+%n");
         System.out.format(leftAlignFormat, "leads" , "1" );
         System.out.format(leftAlignFormat, "interactions", "2" );
+        System.out.format(leftAlignFormat, "Exit", "3" );
         System.out.format("+-----------------+--------+%n");
 
         Scanner sc = new Scanner(System.in);
@@ -52,7 +64,6 @@ public class Menu {
                 String input1 = sc.nextLine();
                 switch (input1) {
                     case "1"://lead display all
-                        String borderForDisplayAllLead = String.format(displayAllFormatLead, "", "", "", "", "", "", "").replace(" ", "-").replace("|", "+");
                         System.out.print(borderForDisplayAllLead);
                         System.out.format(displayAllFormatLead, "Lead ID", "Name", "Birth Date", "Gender", "Phone", "Email", "Address");
                         System.out.print(borderForDisplayAllLead);
@@ -68,13 +79,14 @@ public class Menu {
                                     lead.getEmail(),
                                     lead.getAddress());
                         }
-                        System.out.format("+----------+----------+------------------------------+--------+---------------+-------------------+-------------------------+%n");
-
+                        System.out.print(borderForDisplayAllLead);
+                        Menu.start();
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
                         String inputIdLead = sc.nextLine();
                         System.out.println(leadDatabase.getRow("lead_" + inputIdLead));
+                        Menu.start();
                         break;
                     case "3"://lead add
                         System.out.println("Adding a lead");
@@ -116,6 +128,7 @@ public class Menu {
                             System.out.println("Error occured when trying to add a lead.");
                             e.printStackTrace();
                         }
+                        Menu.start();
                         break;
                 }
                 break;
@@ -130,9 +143,9 @@ public class Menu {
                 String input2 = sc.nextLine();
                 switch (input2) {
                     case "1": // interaction display all
-                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");// 17 18 10 10 11
-                        System.out.format("| Interaction ID  |        Interaction Date        | Lead ID  |     Mean     | Potential |%n");
-                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
+                        System.out.format(borderForDisplayAllInteraction);
+                        System.out.format(displayAllFormatInteraction,"Interaction ID", "Interaction Date", "Lead ID", "Mean ", "Potential");
+                        System.out.format(borderForDisplayAllInteraction);
                         for (int i = 0; i < interactions.length; i++) {
                             Interaction interaction = Interaction.fromCSV(interactions[i]);
                             System.out.format(
@@ -143,15 +156,18 @@ public class Menu {
                                     interaction.getMean(),
                                     interaction.getPotential());
                         }
-                        System.out.format("+-----------------+--------------------------------+----------+--------------+-----------+%n");
+                        System.out.format(borderForDisplayAllInteraction);
+                        Menu.start();
                         break;
                     case "2":
                         System.out.println("which id are you looking for?");
                         String inputIdInteraction = sc.nextLine();
                         System.out.println(interactionDatabase.getRow("inter_" + inputIdInteraction));
+                        Menu.start();
                         break;
                     case "3":
                         System.out.println("");
+                        Menu.start();
                         break;
                 }
                 break;
