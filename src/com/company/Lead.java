@@ -130,6 +130,7 @@ public class Lead implements IDatabaseEntity {
     @Override
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n");
         sb.append(id);
         sb.append(",");
         sb.append(name);
@@ -143,7 +144,7 @@ public class Lead implements IDatabaseEntity {
         sb.append(email);
         sb.append(",");
         sb.append(address);
-        sb.append("\n");
+
         return sb.toString();
     }
 }

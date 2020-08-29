@@ -108,6 +108,7 @@ public class Interaction implements IDatabaseEntity {
     @Override
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n");
         sb.append(id);
         sb.append(",");
         sb.append(DateParser.dateToString(interactionDate));
@@ -117,7 +118,6 @@ public class Interaction implements IDatabaseEntity {
         sb.append(mean);
         sb.append(",");
         sb.append(potential);
-        sb.append("\n");
         return sb.toString();
     }
 }
