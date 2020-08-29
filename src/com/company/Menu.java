@@ -7,14 +7,47 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class Menu {
+    private static Database leadDatabase = new Database(Lead.fileName);
+    private static Database interactionDatabase = new Database(Interaction.fileName);
+    private static String leftAlignFormat = "| %-15s | %-6s |%n";
+
+    private static void printMenuOptions() {
+        System.out.format("+-----------------+--------+%n");
+        System.out.format("| Access          | Inputs |%n");
+        System.out.format("+-----------------+--------+%n");
+        System.out.format(leftAlignFormat, "Leads", "1");
+        System.out.format(leftAlignFormat, "Interactions", "2");
+        System.out.format(leftAlignFormat, "Exit", "3");
+        System.out.format("+-----------------+--------+%n");
+    }
+
+    private static void printLeadMenuOptions() {
+        System.out.format("+-----------------+--------+%n");
+        System.out.format("| Tasks           | Inputs |%n");
+        System.out.format("+-----------------+--------+%n");
+        System.out.format(leftAlignFormat, "Display_all", "1");
+        System.out.format(leftAlignFormat, "Find by ID", "2");
+        System.out.format(leftAlignFormat, "Add lead", "3");
+        System.out.format("+-----------------+--------+%n");
+    }
+
+    private static void printInteractionMenuOptions() {
+        System.out.format("+-----------------+--------+%n");
+        System.out.format("| Tasks           | Inputs |%n");
+        System.out.format("+-----------------+--------+%n");
+        System.out.format(leftAlignFormat, "Display all", "1");
+        System.out.format(leftAlignFormat, "Find by ID", "2");
+        System.out.format(leftAlignFormat, "Add interaction", "3");
+        System.out.format("+-----------------+--------+%n");
+    }
+
     public static void start() throws Exception {
-        Database leadDatabase = new Database(Lead.fileName);
-        Database interactionDatabase = new Database(Interaction.fileName);
-        String[] leads = leadDatabase.getAll();
-        String[] interactions = interactionDatabase.getAll();
+
 
         boolean shouldExit = false;
         while (!shouldExit) {
+            String[] leads = leadDatabase.getAll();
+            String[] interactions = interactionDatabase.getAll();
             //finding longest string for each lead's element
             int fLeadId = 0, fName = 0, fBirthday = 0, fPhone = 0, fEmail = 0, fAddress = 0;
             for (int i = 0; i < leads.length; i++) {
@@ -37,43 +70,30 @@ public class Menu {
             }
 
             //all format
-            String leftAlignFormat = "| %-15s | %-6s |%n";
-            String displayAllFormatLead = "| %-" + fLeadId + "s | %-" + fName + "s | %-" + fBirthday + "s | %-6s | %-" + fPhone + "s | %-" + fEmail + "s | %-" + fAddress + "s |%n";
-            String displayAllFormatInteraction = "| %-" + fInteractionID + "s | %-" + fInteractionDate + "s | %-" + fInteractionLeadID + "s | %-" + fMean + "s | %-9s |%n";
-            String borderForDisplayAllLead = String.format(displayAllFormatLead, "", "", "", "", "", "", "").replace(" ", "-").replace("|", "+");
-            String borderForDisplayAllInteraction = String.format(displayAllFormatInteraction, "", "", "", "", "").replace(" ", "-").replace("|", "+");
 
-            System.out.format("+-----------------+--------+%n");
-            System.out.format("| Access          | Inputs |%n");
-            System.out.format("+-----------------+--------+%n");
-            System.out.format(leftAlignFormat, "leads", "1");
-            System.out.format(leftAlignFormat, "interactions", "2");
-            System.out.format(leftAlignFormat, "Exit", "3");
-            System.out.format("+-----------------+--------+%n");
+            String displayAllLeadFormat = "| %-" + fLeadId + "s | %-" + fName + "s | %-" + fBirthday + "s | %-6s | %-" + fPhone + "s | %-" + fEmail + "s | %-" + fAddress + "s |%n";
+            String displayAllFormatInteraction = "| %-" + fInteractionID + "s | %-" + fInteractionDate + "s | %-" + fInteractionLeadID + "s | %-" + fMean + "s | %-9s |%n";
+            String borderForDisplayAllLead = String.format(displayAllLeadFormat, "", "", "", "", "", "", "").replace(" ", "-").replace("|", "+");
+            String borderForDisplayAllInteraction = String.format(displayAllFormatInteraction, "", "", "", "", "").replace(" ", "-").replace("|", "+");
+            printMenuOptions();
 
             Scanner sc = new Scanner(System.in);
 
-            String input = sc.nextLine();
+            String menuInput = sc.nextLine();
 
-            switch (input) {
-                case "1"://lead
-                    System.out.format("+-----------------+--------+%n");
-                    System.out.format("| Tasks           | Inputs |%n");
-                    System.out.format("+-----------------+--------+%n");
-                    System.out.format(leftAlignFormat, "Display_all", "1");
-                    System.out.format(leftAlignFormat, "Find by ID", "2");
-                    System.out.format(leftAlignFormat, "Add_lead", "3");
-                    System.out.format("+-----------------+--------+%n");
-                    String input1 = sc.nextLine();
-                    switch (input1) {
-                        case "1"://lead display all
+            switch (menuInput) {
+                case "1": {
+                    printLeadMenuOptions();
+                    String input = sc.nextLine();
+                    switch (input) {
+                        case "1": {
                             System.out.print(borderForDisplayAllLead);
-                            System.out.format(displayAllFormatLead, "Lead ID", "Name", "Birth Date", "Gender", "Phone", "Email", "Address");
+                            System.out.format(displayAllLeadFormat, "Lead ID", "Name", "Birth Date", "Gender", "Phone", "Email", "Address");
                             System.out.print(borderForDisplayAllLead);
                             for (int i = 0; i < leads.length; i++) {
                                 Lead lead = Lead.fromCSV(leads[i]);
                                 System.out.format(
-                                        displayAllFormatLead,
+                                        displayAllLeadFormat,
                                         lead.getId(),
                                         lead.getName(),
                                         DateParser.dateToString(lead.getBirthDate()),
@@ -84,18 +104,19 @@ public class Menu {
                             }
                             System.out.print(borderForDisplayAllLead);
                             break;
-                        case "2":
+                        }
+                        case "2": {
                             System.out.println("which id are you looking for?");
                             String inputIdLead = sc.nextLine();
                             System.out.println(leadDatabase.getRow("lead_" + inputIdLead));
-                            Menu.start();
                             break;
-                        case "3"://lead add
+                        }
+                        case "3": {
                             System.out.println("Adding a lead");
                             System.out.print("Name                          | ");
                             String name = sc.nextLine();
                             Date birthDate = null;
-                            boolean valid = true;
+
                             do {
                                 try {
                                     System.out.print("Birth Date (YYYY-MM-DD)    | ");
@@ -105,6 +126,7 @@ public class Menu {
                                     System.out.println("Invalid format. Please try again.");
                                 }
                             } while (birthDate == null);
+                            boolean valid = true;
                             boolean isMale = false;
                             do {
                                 if (!valid) {
@@ -131,20 +153,15 @@ public class Menu {
                                 e.printStackTrace();
                             }
                             break;
+                        }
                     }
                     break;
-
-                case "2"://interaction
-                    System.out.format("+-----------------+--------+%n");
-                    System.out.format("| Tasks           | Inputs |%n");
-                    System.out.format("+-----------------+--------+%n");
-                    System.out.format(leftAlignFormat, "Display all", "1");
-                    System.out.format(leftAlignFormat, "Find by ID", "2");
-                    System.out.format(leftAlignFormat, "Add interaction", "3");
-                    System.out.format("+-----------------+--------+%n");
-                    String input2 = sc.nextLine();
-                    switch (input2) {
-                        case "1": // interaction display all
+                }
+                case "2": {
+                    printInteractionMenuOptions();
+                    String input = sc.nextLine();
+                    switch (input) {
+                        case "1": {
                             System.out.format(borderForDisplayAllInteraction);
                             System.out.format(displayAllFormatInteraction, "Interaction ID", "Interaction Date", "Lead ID", "Mean ", "Potential");
                             System.out.format(borderForDisplayAllInteraction);
@@ -160,19 +177,24 @@ public class Menu {
                             }
                             System.out.format(borderForDisplayAllInteraction);
                             break;
-                        case "2":
+                        }
+                        case "2": {
                             System.out.println("which id are you looking for?");
                             String inputIdInteraction = sc.nextLine();
                             System.out.println(interactionDatabase.getRow("inter_" + inputIdInteraction));
                             break;
-                        case "3":
+                        }
+                        case "3": {
                             System.out.println("");
                             break;
+                        }
                     }
                     break;
-                case "3":
+                }
+                case "3": {
                     shouldExit = true;
                     break;
+                }
             }
         }
     }
