@@ -93,17 +93,16 @@ public class Interaction implements IDatabaseEntity {
 
     public static Interaction fromCSV(String row){
         String[] data = row.split(",");
-        String[] newData = Lead.fillArray(data);
-        String id = newData[0];
+        String id = data[0];
         Date interactionDate = null;
         try {
-            interactionDate = DateParser.stringToDate(newData[1]);
+            interactionDate = DateParser.stringToDate(data[1]);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String leadId = newData[2];
-        String mean = newData[3];
-        Potential potential = Potential.valueOf(newData[4]);
+        String leadId = data[2];
+        String mean = data[3];
+        Potential potential = Potential.valueOf(data[4]);
         return new Interaction(id,interactionDate,leadId,mean,potential);
     }
     @Override

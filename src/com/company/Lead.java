@@ -1,6 +1,7 @@
 package com.company;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
@@ -107,38 +108,21 @@ public class Lead implements IDatabaseEntity {
         sb.append("\n");
         return sb.toString();
     }
-    public static String[] fillArray(String[] arr){
-        String[] newArr = new String[7];
-        for (int i = 0; i <7 ; i++) {
-            newArr[i] = "";
-        }
-        if (arr.length < 7){
-            for (int i = 0; i <arr.length ; i++) {
-                newArr[i] = arr[i];
-            }
-        } else {
-            for (int i = 0; i < 7 ; i++) {
-                newArr[i] = arr[i];
-            }
-        }
-        return newArr;
-    }
 
     public static Lead fromCSV(String row) {
         String[] data = row.split(",");
-        String[] newData = fillArray(data);
-        String id = newData[0];
-        String name = newData[1];
+        String id = data[0];
+        String name = data[1];
         Date birthDate = null;
         try {
-            birthDate = DateParser.stringToDate(newData[2]);
+            birthDate = DateParser.stringToDate(data[2]);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        boolean isMale = Boolean.parseBoolean(newData[3]);
-        String phone = newData[4];
-        String email = newData[5];
-        String address = newData[6];
+        boolean isMale = Boolean.parseBoolean(data[3]);
+        String phone = data[4];
+        String email = data[5];
+        String address = data[6];
         return new Lead(id, name, birthDate, isMale, phone, email, address);
 
     }
