@@ -82,7 +82,7 @@ public class Menu {
             Lead lead = Lead.fromCSV(leads[i]);
             fLeadId = Math.max(fLeadId, lead.getId().length());
             fName = Math.max(fName, lead.getName().length());
-            fBirthday = Math.max(fBirthday, DateParser.dateToString(lead.getBirthDate()).length());
+            fBirthday = Math.max(fBirthday, DateParser.format(lead.getBirthDate()).length());
             fPhone = Math.max(fPhone, lead.getPhone().length());
             fEmail = Math.max(fEmail, lead.getEmail().length());
             fAddress = Math.max(fAddress, lead.getAddress().length());
@@ -98,7 +98,7 @@ public class Menu {
                     displayFormat,
                     lead.getId(),
                     lead.getName(),
-                    DateParser.dateToString(lead.getBirthDate()),
+                    DateParser.format(lead.getBirthDate()),
                     lead.isMale() ? "Male" : "Female",
                     lead.getPhone(),
                     lead.getEmail(),
@@ -112,7 +112,7 @@ public class Menu {
         for (int i = 0; i < interactions.length; i++) {
             Interaction interaction = Interaction.fromCSV(interactions[i]);
             fInteractionID = Math.max(Math.max(fInteractionID, interaction.getId().length()), "Interaction ID".length());
-            fInteractionDate = Math.max(Math.max(fInteractionDate, DateParser.dateToString(interaction.getInteractionDate()).length()), "Interaction Date".length());
+            fInteractionDate = Math.max(Math.max(fInteractionDate, DateParser.format(interaction.getInteractionDate()).length()), "Interaction Date".length());
             fInteractionLeadID = Math.max(fInteractionLeadID, interaction.getLeadId().length());
             fMean = Math.max(Math.max(fMean, interaction.getMean().length()), "Lead ID".length());
         }
@@ -126,7 +126,7 @@ public class Menu {
             System.out.format(
                     displayFormat,
                     interaction.getId(),
-                    DateParser.dateToString(interaction.getInteractionDate()),
+                    DateParser.format(interaction.getInteractionDate()),
                     interaction.getLeadId(),
                     interaction.getMean(),
                     interaction.getPotential());
@@ -157,7 +157,7 @@ public class Menu {
                     try {
                         System.out.print("Birth Date (YYYY-MM-DD)    | ");
                         String birthDateString = sc.nextLine();
-                        birthDate = DateParser.stringToDate(birthDateString);
+                        birthDate = DateParser.parse(birthDateString);
                     } catch (ParseException e) {
                         System.out.println("Invalid format. Please try again.");
                     }
