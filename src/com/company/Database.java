@@ -61,7 +61,7 @@ public class Database {
             return "Row not found";
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "An error occured";
+            return "An error occurred";
         }
     }
 
@@ -77,7 +77,7 @@ public class Database {
             return lastRow;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "An error occured";
+            return "An error occurred";
         }
     }
 

@@ -63,6 +63,7 @@ public class Menu {
         System.out.format(leftAlignFormat, "Display_all", "1");
         System.out.format(leftAlignFormat, "Find by ID", "2");
         System.out.format(leftAlignFormat, "Add lead", "3");
+        System.out.format(leftAlignFormat, "Delete", "4");
         System.out.format("+-----------------+--------+%n");
     }
 
@@ -134,7 +135,7 @@ public class Menu {
         System.out.format(border);
     }
 
-    private static void startLeadMenu() {
+    private static void startLeadMenu() throws IOException {
         printLeadMenuOptions();
         String input = sc.nextLine();
         switch (input) {
@@ -190,10 +191,15 @@ public class Menu {
                 }
                 break;
             }
+            case "4": {
+                System.out.println("please enter the id to delete: ");
+                String deleteLead = sc.nextLine();
+                leadDatabase.delete("lead_"+deleteLead);
+            }
         }
     }
 
-    private static void startInteractionMenu() {
+    private static void startInteractionMenu() throws IOException {
         printInteractionMenuOptions();
         String input = sc.nextLine();
         switch (input) {
@@ -208,8 +214,13 @@ public class Menu {
                 break;
             }
             case "3": {
-                System.out.println("");
+                System.out.println("adding an interaction");
                 break;
+            }
+            case "4": {
+                System.out.println("please enter the id to delete: ");
+                String deleteInteraction = sc.nextLine();
+                interactionDatabase.delete("inter_"+ deleteInteraction);
             }
         }
     }
