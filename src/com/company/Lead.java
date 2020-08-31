@@ -129,22 +129,7 @@ public class Lead implements IDatabaseEntity {
 
     @Override
     public String toCSV() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(",");
-        sb.append(name);
-        sb.append(",");
-        sb.append(DateParser.dateToString(birthDate));
-        sb.append(",");
-        sb.append(isMale);
-        sb.append(",");
-        sb.append(phone);
-        sb.append(",");
-        sb.append(email);
-        sb.append(",");
-        sb.append(address);
-        sb.append("\n");
-        return sb.toString();
+        return CSVWriter.getCSVRow(new String[]{id,name,DateParser.dateToString(birthDate),Boolean.toString(isMale),phone,email,address});
     }
 }
 

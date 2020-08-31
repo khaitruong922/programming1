@@ -107,17 +107,7 @@ public class Interaction implements IDatabaseEntity {
     }
     @Override
     public String toCSV() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(",");
-        sb.append(DateParser.dateToString(interactionDate));
-        sb.append(",");
-        sb.append(leadId);
-        sb.append(",");
-        sb.append(mean);
-        sb.append(",");
-        sb.append(potential);
-        sb.append("\n");
-        return sb.toString();
+        // not test yet
+        return CSVWriter.getCSVRow(new String[]{id,DateParser.dateToString(interactionDate),leadId,mean,potential.toString()});
     }
 }
