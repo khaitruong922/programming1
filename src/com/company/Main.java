@@ -1,12 +1,7 @@
 package com.company;
 
-import javax.swing.text.DateFormatter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.SecureCacheResponse;
-import java.util.Date;
-import java.util.Scanner;
+import menu.Option;
+import menu.OptionMenu;
 
 public class Main {
 
@@ -18,7 +13,7 @@ public class Main {
         optionMenu.addOption(leadOption);
         optionMenu.addOption(interactionOption);
         optionMenu.addOption(exitOption);
-        optionMenu.display();
+        optionMenu.start();
 
     }
 }

@@ -1,4 +1,4 @@
-package com.company;
+package menu;
 
 public class Option {
     private String label;
@@ -9,8 +9,8 @@ public class Option {
         this.toggleKey = toggleKey;
     }
 
-    public void execute() {
-        System.out.println("Do something");
+    public void execute(ICommand command) {
+        command.execute();
     }
 
     public String getLabel() {
@@ -22,6 +22,6 @@ public class Option {
     }
 
     public String getTitle() {
-        return toggleKey + ". " +label;
+        return toggleKey + ". " + label;
     }
 }
