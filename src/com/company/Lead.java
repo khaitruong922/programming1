@@ -110,26 +110,25 @@ public class Lead implements IDatabaseEntity {
     }
 
     public static Lead fromCSV(String row) {
-        String[] data = row.split(",");
-        String id = data[0];
-        String name = data[1];
+        String[] fields = row.split(",");
+        String id = fields[0];
+        String name = fields[1];
         Date birthDate = null;
         try {
-            birthDate = DateParser.stringToDate(data[2]);
+            birthDate = DateParser.parse(fields[2]);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        boolean isMale = Boolean.parseBoolean(data[3]);
-        String phone = data[4];
-        String email = data[5];
-        String address = data[6];
+        boolean isMale = Boolean.parseBoolean(fields[3]);
+        String phone = fields[4];
+        String email = fields[5];
+        String address = fields[6];
         return new Lead(id, name, birthDate, isMale, phone, email, address);
-
     }
 
     @Override
     public String toCSV() {
-        return CSVWriter.getCSVRow(new String[]{id,name,DateParser.dateToString(birthDate),Boolean.toString(isMale),phone,email,address});
+        return String.join(",", id, name, DateParser.format(birthDate), Boolean.toString(isMale), phone, email, address) + "\n";
     }
 }
 

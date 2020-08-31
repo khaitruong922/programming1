@@ -7,11 +7,11 @@ import java.util.Date;
 public class DateParser {
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static Date stringToDate(String s) throws ParseException {
+    public static Date parse(String s) throws ParseException {
         return sdf.parse(s);
     }
 
-    public static String dateToString(Date d) {
+    public static String format(Date d) {
         if (d == null) return "";
         return sdf.format(d);
     }
