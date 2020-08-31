@@ -19,6 +19,7 @@ public class OptionMenu {
         for (Option option : options) {
             System.out.println(option.getTitle());
         }
+        System.out.print("Enter an option: ");
     }
 
     public void start() {
@@ -28,12 +29,7 @@ public class OptionMenu {
             String input = sc.next();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
-                    option.execute(new ICommand() {
-                        @Override
-                        public void execute() {
-
-                        }
-                    });
+                    option.execute();
                     return;
                 }
             }

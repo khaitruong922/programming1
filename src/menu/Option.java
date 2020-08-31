@@ -3,13 +3,15 @@ package menu;
 public class Option {
     private String label;
     private String toggleKey;
+    private ICommand command;
 
-    public Option(String label, String toggleKey) {
+    public Option(String label, String toggleKey, ICommand command) {
         this.label = label;
         this.toggleKey = toggleKey;
+        this.command = command;
     }
 
-    public void execute(ICommand command) {
+    public void execute() {
         command.execute();
     }
 
