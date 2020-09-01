@@ -116,6 +116,15 @@ public class MainMenu {
     }
 
     private static void addInteraction() {
+        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
+        Date interDate = null;
+        try {
+            interDate = DateParser.parse(interDateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String interLeadIDInput = new InputField("Lead ID: ","Invalid Lead ID format.").next();
+        String meanInput = new InputField("Mean: ", "Invalid mean format").next();
 
     }
 
