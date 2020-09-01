@@ -9,7 +9,7 @@ public class Interaction implements IDatabaseEntity {
     public static Interaction example = new Interaction("inter_001",new Date(),"001","facebook",Potential.negative);
     public static String fileName = "interactions.csv";
     public static String idPrefix = "inter_";
-    private enum Potential{
+    enum Potential{
         negative,
         neutral,
         positive;

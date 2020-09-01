@@ -186,7 +186,7 @@ public class Menu {
                     leadDatabase.add(addLead);
                     System.out.println("Lead added successfully");
                 } catch (IOException e) {
-                    System.out.println("Error occured when trying to add a lead.");
+                    System.out.println("Error occurred when trying to add a lead.");
                     e.printStackTrace();
                 }
                 break;
@@ -194,7 +194,7 @@ public class Menu {
             case "4": {
                 System.out.println("please enter the id to delete: ");
                 String deleteLead = sc.nextLine();
-                leadDatabase.delete("lead_"+deleteLead);
+                leadDatabase.delete("lead_" + deleteLead);
             }
         }
     }
@@ -215,12 +215,56 @@ public class Menu {
             }
             case "3": {
                 System.out.println("adding an interaction");
+                Date interactionDate = null;
+                do {
+                    try {
+                        System.out.print("Interaction date (YYYY-MM-DD)    | ");
+                        String interactionDateInput = sc.nextLine();
+                        interactionDate = DateParser.stringToDate(interactionDateInput);
+                    } catch (ParseException e) {
+                        System.out.println("Invalid format. Please try again.");
+                    }
+                } while (interactionDate == null);
+                System.out.print("inter lead id                |");
+                String interLeadIdInput = sc.nextLine();
+                System.out.print("inter mean                   |");
+                String mean = sc.nextLine();
+                boolean valid = true;
+                Interaction.Potential potential = Interaction.Potential.neutral;
+                do {
+                    if (!valid) {
+                        System.out.println("Invalid input. Please type 0 for negative and 1 for neutral, 2 for positive.");
+                    }
+                    System.out.print("Potential (0: negative, 1: neutral, 2: positive)                | ");
+                    String choice = sc.nextLine();
+                    valid = (choice.equals("0")) || (choice.equals("1") || (choice.equals("2")));
+                    switch (choice) {
+                        case "0":
+                            potential = Interaction.Potential.negative;
+                            break;
+                        case "1":
+                            potential = Interaction.Potential.neutral;
+                            break;
+                        case "2":
+                            potential = Interaction.Potential.positive;
+                            break;
+                    }
+
+                } while (!valid);
+                Interaction addInteraction = new Interaction(Interaction.idPrefix + interactionDatabase.getNextId(), interactionDate, Lead.idPrefix + interLeadIdInput, mean, potential);
+                try {
+                    interactionDatabase.add(addInteraction);
+                    System.out.println("Interaction added successfully");
+                } catch (IOException e) {
+                    System.out.println("Error occurred when trying to add a interaction.");
+                    e.printStackTrace();
+                }
                 break;
             }
             case "4": {
                 System.out.println("please enter the id to delete: ");
                 String deleteInteraction = sc.nextLine();
-                interactionDatabase.delete("inter_"+ deleteInteraction);
+                interactionDatabase.delete("inter_" + deleteInteraction);
             }
         }
     }
