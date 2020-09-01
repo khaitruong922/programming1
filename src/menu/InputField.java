@@ -4,20 +4,29 @@ import java.util.Scanner;
 
 public class InputField {
     private static Scanner sc = new Scanner(System.in);
+    private String label;
+    private String errorMessage;
 
-    private InputField() {
-
+    public InputField(String label) {
+        this.label = label;
     }
 
-    public static String next(IValidator validator) {
+    public InputField(String label, String errorMessage) {
+        this(label);
+        this.errorMessage = errorMessage;
+    }
+
+    public String next(IValidator validator) {
+        System.out.print(label);
         String input = sc.next();
         if (validator.validate(input)) {
             return input;
         }
+        System.out.println(errorMessage);
         return next(validator);
     }
 
-    public static String next() {
-        return sc.next();
+    public String next() {
+        return next(s -> true);
     }
 }

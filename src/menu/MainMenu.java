@@ -1,10 +1,14 @@
 package menu;
 
 import com.company.Database;
+import com.company.DateParser;
 import com.company.Interaction;
 import com.company.Lead;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 
 public class MainMenu {
     private static final Database leadDatabase = new Database(Lead.fileName);
@@ -87,6 +91,27 @@ public class MainMenu {
     }
 
     private static void addLead() {
+        String name = new InputField("Name: ").next();
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
+        Date birthDate = null;
+        try {
+            birthDate = DateParser.parse(birthDateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String genderInput = new InputField("Gender: ", "Invalid input").next(s -> s.equals("0") || s.equals("1"));
+        boolean isMale = genderInput.equals("1");
+        String phone = new InputField("Phone: ").next();
+        String email = new InputField("Email: ").next();
+        String address = new InputField("Address: ").next();
+        Lead lead = new Lead(leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
+        try {
+            leadDatabase.add(lead);
+            System.out.println("Lead added successfully");
+        } catch (IOException e) {
+            System.out.println("Error occurred when adding a lead.");
+            e.printStackTrace();
+        }
 
     }
 
