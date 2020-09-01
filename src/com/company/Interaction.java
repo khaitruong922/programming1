@@ -92,33 +92,21 @@ public class Interaction implements IDatabaseEntity {
     }
 
     public static Interaction fromCSV(String row){
-        String[] data = row.split(",");
-        String[] newData = Lead.fillArray(data);
-        String id = newData[0];
+        String[] fields = row.split(",");
+        String id = fields[0];
         Date interactionDate = null;
         try {
-            interactionDate = DateParser.stringToDate(newData[1]);
+            interactionDate = DateParser.parse(fields[1]);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String leadId = newData[2];
-        String mean = newData[3];
-        Potential potential = Potential.valueOf(newData[4]);
+        String leadId = fields[2];
+        String mean = fields[3];
+        Potential potential = Potential.valueOf(fields[4]);
         return new Interaction(id,interactionDate,leadId,mean,potential);
     }
     @Override
     public String toCSV() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(",");
-        sb.append(DateParser.dateToString(interactionDate));
-        sb.append(",");
-        sb.append(leadId);
-        sb.append(",");
-        sb.append(mean);
-        sb.append(",");
-        sb.append(potential);
-        sb.append("\n");
-        return sb.toString();
+        return String.join(",",id,DateParser.format(interactionDate),leadId,mean,potential.toString())+"\n";
     }
 }

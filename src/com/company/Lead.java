@@ -1,6 +1,7 @@
 package com.company;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
@@ -107,60 +108,27 @@ public class Lead implements IDatabaseEntity {
         sb.append("\n");
         return sb.toString();
     }
-    public static String[] fillArray(String[] arr){
-        String[] newArr = new String[7];
-        for (int i = 0; i <7 ; i++) {
-            newArr[i] = "";
-        }
-        if (arr.length < 7){
-            for (int i = 0; i <arr.length ; i++) {
-                newArr[i] = arr[i];
-            }
-        } else {
-            for (int i = 0; i < 7 ; i++) {
-                newArr[i] = arr[i];
-            }
-        }
-        return newArr;
-    }
 
     public static Lead fromCSV(String row) {
-        String[] data = row.split(",");
-        String[] newData = fillArray(data);
-        String id = newData[0];
-        String name = newData[1];
+        String[] fields = row.split(",");
+        String id = fields[0];
+        String name = fields[1];
         Date birthDate = null;
         try {
-            birthDate = DateParser.stringToDate(newData[2]);
+            birthDate = DateParser.parse(fields[2]);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        boolean isMale = Boolean.parseBoolean(newData[3]);
-        String phone = newData[4];
-        String email = newData[5];
-        String address = newData[6];
+        boolean isMale = Boolean.parseBoolean(fields[3]);
+        String phone = fields[4];
+        String email = fields[5];
+        String address = fields[6];
         return new Lead(id, name, birthDate, isMale, phone, email, address);
-
     }
 
     @Override
     public String toCSV() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(",");
-        sb.append(name);
-        sb.append(",");
-        sb.append(DateParser.dateToString(birthDate));
-        sb.append(",");
-        sb.append(isMale);
-        sb.append(",");
-        sb.append(phone);
-        sb.append(",");
-        sb.append(email);
-        sb.append(",");
-        sb.append(address);
-        sb.append("\n");
-        return sb.toString();
+        return String.join(",", id, name, DateParser.format(birthDate), Boolean.toString(isMale), phone, email, address) + "\n";
     }
 }
 
