@@ -18,7 +18,7 @@ public class InputField {
 
     public String next(IValidator validator) {
         System.out.print(label);
-        String input = sc.next();
+        String input = sc.nextLine();
         if (validator.validate(input)) {
             return input;
         }

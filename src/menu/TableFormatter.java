@@ -18,6 +18,7 @@ public class TableFormatter {
         for (String[] row : rows) {
             printTableRow(row);
         }
+        printTableBorder();
     }
 
     private void printTableRow(String[] row) {

@@ -8,6 +8,7 @@ import com.company.Lead;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.PrimitiveIterator;
@@ -18,10 +19,6 @@ public class MainMenu {
 
     private static String[] getLeads() {
         return leadDatabase.getAll();
-    }
-
-    private static int getNumberOfLeadRow() {
-        return leadDatabase.getNumberOfRow();
     }
 
     private static String[] getInteractions() {
@@ -62,9 +59,10 @@ public class MainMenu {
             deleteLead();
         }));
         optionMenu.add(new Option("Back", "5", () -> {
-            startMainMenu();
         }));
         optionMenu.start();
+        // Always go back to main menu after finishing a task
+        startMainMenu();
     }
 
     private static void startInteractionMenu() {
@@ -82,28 +80,35 @@ public class MainMenu {
             deleteInteraction();
         }));
         optionMenu.add(new Option("Back", "5", () -> {
-            startMainMenu();
         }));
         optionMenu.start();
+        // Always go back to main menu after finishing a task
+        startMainMenu();
     }
 
     private static void viewLeads() {
-        String[] lead = getLeads();
-        String[][] leads = new String[getNumberOfLeadRow()][];
-        for (int i = 0; i < getNumberOfLeadRow(); i++) {
-            leads[i] = lead;
+        String[] leads = getLeads();
+        ArrayList<String[]> rows = new ArrayList<>();
+        for (String lead : leads) {
+            rows.add(Lead.fromCSV(lead).toStringArray());
         }
-        String[] labels = new String[]{"lead ID", "Name", "Birth Day", "Gender", "Phone", "Email", "Address"};
-        TableFormatter tableFormatter = new TableFormatter(labels,leads);
+        TableFormatter tableFormatter = new TableFormatter(Lead.fields, rows.toArray(new String[rows.size()][Lead.fields.length]));
         tableFormatter.display();
     }
 
     private static void viewInteractions() {
-
+        String[] interactions = getInteractions();
+        ArrayList<String[]> rows = new ArrayList<>();
+        for (String interaction : interactions) {
+            rows.add(Interaction.fromCSV(interaction).toStringArray());
+        }
+        TableFormatter tableFormatter = new TableFormatter(Interaction.fields, rows.toArray(new String[rows.size()][Interaction.fields.length]));
+        tableFormatter.display();
     }
 
     private static void addLead() {
-        String name = new InputField("Name: ").next();
+        String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
+        String name = new InputField("Name: ", "Please type in a name").next(new RequiredValidator());
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
         Date birthDate = null;
         try {
@@ -111,23 +116,23 @@ public class MainMenu {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String genderInput = new InputField("Gender: ", "Invalid input").next(s -> s.equals("0") || s.equals("1"));
+        String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1.").next(s -> s.equals("0") || s.equals("1"));
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ").next();
-        String email = new InputField("Email: ").next();
-        String address = new InputField("Address: ").next();
-        Lead lead = new Lead(leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
-        try {
-            leadDatabase.add(lead);
-            System.out.println("Lead added successfully");
-        } catch (IOException e) {
-            System.out.println("Error occurred when adding a lead.");
-            e.printStackTrace();
+        String phone = new InputField("Phone: ", "Please type in a phone number.").next(new RequiredValidator());
+        String email = new InputField("Email: ", "Please type in an email.").next(new RequiredValidator());
+        String address = new InputField("Address: ", "Please type in an address.").next(new RequiredValidator());
+        Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
+        if (leadDatabase.add(lead)){
+            System.out.println("Lead added successfully with id " + id);
+            return;
         }
+        System.out.println("Error occurred when adding a lead.");
+
 
     }
 
     private static void addInteraction() {
+        String id = Interaction.idPrefix + interactionDatabase.getNextIdNumber();
         String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
         Date interDate = null;
         try {
@@ -135,9 +140,30 @@ public class MainMenu {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String interLeadIDInput = new InputField("Lead ID: ", "Invalid Lead ID format.").next();
-        String meanInput = new InputField("Mean: ", "Invalid mean format").next();
-
+        String leadId = new InputField("Lead ID: ", "Lead ID does not exist.").next();
+        String mean = new InputField("Mean: ", "Please type in a mean.").next(new RequiredValidator());
+        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive) : ", "Invalid input. Please type in 0 or 1 or 2.")
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
+        switch (potential) {
+            case "0": {
+                potential = "negative";
+                break;
+            }
+            case "1": {
+                potential = "neutral";
+                break;
+            }
+            case "2": {
+                potential = "positive";
+                break;
+            }
+        }
+        Interaction interaction = new Interaction(id, interDate, leadId, mean, potential);
+        if (interactionDatabase.add(interaction)){
+            System.out.println("Interaction added successfully with id " + id);
+            return;
+        }
+        System.out.println("Error occurred when adding an interaction.");
     }
 
     private static void updateLead() {
@@ -149,22 +175,24 @@ public class MainMenu {
     }
 
     private static void deleteLead() {
-        String leadID = new InputField("input lead ID","Invalid lead ID format.").next();
-        try {
-            leadDatabase.delete(leadID);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String id = new InputField("Enter a lead ID to delete: ", "").next();
+        if(leadDatabase.delete(id)){
+            System.out.println("Delete " + id + " successfully.");
+            return;
         }
+        System.out.println("Error occurred when deleting a lead.");
+
+
     }
 
     private static void deleteInteraction() {
 
-            String interactionID = new InputField("input interaction ID", "invalid interaction ID format.").next();
-        try {
-            interactionDatabase.delete(interactionID);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String id = new InputField("Enter an interaction ID to delete: ", "").next();
+        if(interactionDatabase.delete(id)){
+            System.out.println("Delete " + id + " successfully.");
+            return;
         }
+        System.out.println("Error occurred when deleting a lead.");
 
     }
 }

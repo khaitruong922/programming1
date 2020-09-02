@@ -8,6 +8,7 @@ public class Lead implements IDatabaseEntity {
     public static Lead example = new Lead("lead_001", "Khai", new Date(), true, "090", "abc@a.com", "address");
     public static String fileName = "leads.csv";
     public static String idPrefix = "lead_";
+    public static String[] fields = new String[]{"ID","Name","Birth date","Gender","Phone","Email","Address"};
     private String id;
     private String name;
     private Date birthDate;
@@ -82,33 +83,6 @@ public class Lead implements IDatabaseEntity {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("Lead ID: ");
-        sb.append(id);
-        sb.append("\n");
-        sb.append("Name: ");
-        sb.append(name);
-        sb.append("\n");
-        sb.append("Date of birth: ");
-        sb.append(birthDate.getTime());
-        sb.append("\n");
-        sb.append("Gender: ");
-        sb.append(isMale ? "Male" : "Female");
-        sb.append("\n");
-        sb.append("Phone: ");
-        sb.append(phone);
-        sb.append("\n");
-        sb.append("Email :");
-        sb.append(email);
-        sb.append("\n");
-        sb.append("Address: ");
-        sb.append(address);
-        sb.append("\n");
-        return sb.toString();
-    }
-
     public static Lead fromCSV(String row) {
         String[] fields = row.split(",");
         String id = fields[0];
@@ -130,5 +104,10 @@ public class Lead implements IDatabaseEntity {
     public String toCSV() {
         return String.join(",", id, name, DateParser.format(birthDate), Boolean.toString(isMale), phone, email, address) + "\n";
     }
+
+    public String[] toStringArray() {
+        return new String[]{id, name, DateParser.format(birthDate), isMale ? "Male" : "Female", phone, email, address};
+    }
+
 }
 
