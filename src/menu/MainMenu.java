@@ -111,12 +111,12 @@ public class MainMenu {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String genderInput = new InputField("Gender: ", "Invalid input").next(s -> s.equals("0") || s.equals("1"));
+        String genderInput = new InputField("Gender 0|female 1|male: ", "Invalid input").next(s -> s.equals("0") || s.equals("1"));
         boolean isMale = genderInput.equals("1");
         String phone = new InputField("Phone: ").next();
         String email = new InputField("Email: ").next();
         String address = new InputField("Address: ").next();
-        Lead lead = new Lead(leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
+        Lead lead = new Lead(Lead.idPrefix + leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
         try {
             leadDatabase.add(lead);
             System.out.println("Lead added successfully");
