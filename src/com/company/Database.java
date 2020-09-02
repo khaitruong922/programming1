@@ -80,6 +80,23 @@ public class Database {
             return "An error occured";
         }
     }
+    public int getNumberOfRow(){
+        File file = new File(fileName);
+        try {
+            FileReader fileReader = new FileReader(file);
+            Scanner sc = new Scanner(fileReader);
+            int count = 0;
+            String reader ="";
+            while (sc.hasNextLine()){
+                reader = sc.nextLine();
+                count++;
+            }
+            return count +2;
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     public String getNextId() {
         String lastRow = getLastRow();
