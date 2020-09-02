@@ -46,6 +46,25 @@ public class Database {
         return rows.toArray(new String[rows.size()]);
     }
 
+    public String[] getAllIds() {
+        ArrayList<String> ids = new ArrayList<>();
+        String[] rows = getAll();
+        for (int i = 0; i < rows.length; i++) {
+            ids.add(rows[i].split(",")[0]);
+        }
+        return ids.toArray(new String[ids.size()]);
+    }
+
+    public boolean hasId(String id) {
+        String[] ids = getAllIds();
+        for (int i = 0; i < ids.length; i++) {
+            if (id.equals(ids[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getRow(String id) {
         File file = new File(fileName);
         try {
