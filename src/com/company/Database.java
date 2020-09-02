@@ -12,23 +12,36 @@ public class Database {
         this.fileName = fileName;
     }
 
-    public void add(IDatabaseEntity databaseEntity) throws IOException {
-        FileWriter fileWriter = new FileWriter(fileName, true);
-        fileWriter.write(databaseEntity.toCSV());
-        fileWriter.close();
+    public boolean add(IDatabaseEntity databaseEntity) {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName, true);
+            fileWriter.write(databaseEntity.toCSV());
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
-    public void delete(String id) throws IOException {
+    public boolean delete(String id) {
         String[] rows = getAll();
-        FileWriter fileWriter = new FileWriter(fileName);
-        for (int i = 0; i < rows.length; i++) {
-            String row = rows[i];
-            String rowId = row.split(",")[0];
-            if (rowId.equals(id)) continue;
-            fileWriter.write(row);
-            fileWriter.write("\n");
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+            for (int i = 0; i < rows.length; i++) {
+                String row = rows[i];
+                String rowId = row.split(",")[0];
+                if (rowId.equals(id)) continue;
+                fileWriter.write(row);
+                fileWriter.write("\n");
+            }
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
-        fileWriter.close();
+
     }
 
     public String[] getAll() {
@@ -99,25 +112,8 @@ public class Database {
             return "An error occured";
         }
     }
-    public int getNumberOfRow(){
-        File file = new File(fileName);
-        try {
-            FileReader fileReader = new FileReader(file);
-            Scanner sc = new Scanner(fileReader);
-            int count = 0;
-            String reader ="";
-            while (sc.hasNextLine()){
-                reader = sc.nextLine();
-                count++;
-            }
-            return count +2;
-        }catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
 
-    public String getNextId() {
+    public String getNextIdNumber() {
         String lastRow = getLastRow();
         String idSeparator = "_";
         if (lastRow.length() == 0) {
