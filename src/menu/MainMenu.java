@@ -194,7 +194,7 @@ public class MainMenu {
         }
         String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1 or press enter to skip.").next(s -> s.equals("0") || s.equals("1") || s.isEmpty());
         boolean isMale = lead.isMale();
-        if(!genderInput.isEmpty()){
+        if (!genderInput.isEmpty()) {
             isMale = genderInput.equals("1");
         }
         String phone = new InputField("Phone: ").next();
@@ -203,9 +203,13 @@ public class MainMenu {
         email = !email.isEmpty() ? email : lead.getEmail();
         String address = new InputField("Address: ").next();
         address = !address.isEmpty() ? address : lead.getAddress();
-        Lead updatedLead = new Lead(id,name,birthDate,isMale,phone,email,address);
+        Lead updatedLead = new Lead(id, name, birthDate, isMale, phone, email, address);
         // update lead in CSV file
-        System.out.println(updatedLead.toCSV());
+        if (leadDatabase.update(id, updatedLead)) {
+            System.out.println("Update " + id + " successfully");
+            return;
+        }
+        System.out.println("Error occurred when updating a lead.");
     }
 
     private static void updateInteraction() {
