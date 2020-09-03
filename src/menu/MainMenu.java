@@ -1,17 +1,15 @@
 package menu;
 
-import com.company.Database;
-import com.company.DateParser;
-import com.company.Interaction;
-import com.company.Lead;
+import database.Database;
+import util.DateParser;
+import database.Interaction;
+import database.Lead;
+import validator.DateValidator;
+import validator.RequiredValidator;
 
-import java.io.IOException;
-import java.security.PrivateKey;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.PrimitiveIterator;
 
 public class MainMenu {
     private static final Database leadDatabase = new Database(Lead.fileName);
@@ -25,11 +23,7 @@ public class MainMenu {
         return interactionDatabase.getAll();
     }
 
-    public static void main(String[] args) {
-        startMainMenu();
-    }
-
-    private static void startMainMenu() {
+    public static void startMainMenu() {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("Lead Menu", "1", () -> {
             startLeadMenu();
@@ -230,8 +224,8 @@ public class MainMenu {
             interactionDate = DateParser.parse(interactionDateInput);
         } catch (ParseException e) {
         }
-        String leadID = new InputField("Enter new lead ID: ","lead id not found").next(s -> leadDatabase.hasId(s)||s.isEmpty());
-        leadID = !leadID.isEmpty()? leadID : interaction.getLeadId();
+        String leadId = new InputField("Enter lead ID: ", "Lead ID does not exist").next(s -> leadDatabase.hasId(s) || s.isEmpty());
+        leadId = !leadId.isEmpty() ? leadId : interaction.getLeadId();
         String mean = new InputField("Mean: ").next();
         mean = !mean.isEmpty() ? mean : interaction.getMean();
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", "Invalid input. Please type in 0 or 1 or 2 or just enter to skip.")
@@ -249,14 +243,18 @@ public class MainMenu {
                 potential = "positive";
                 break;
             }
-            case  "": {
+            default: {
                 potential = interaction.getPotential();
                 break;
             }
         }
-        Interaction updatedInteraction = new Interaction(interaction.getId(),interactionDate,leadID,mean,potential);
+        Interaction updatedInteraction = new Interaction(interaction.getId(), interactionDate, leadId, mean, potential);
         //print update interaction
-        System.out.println(updatedInteraction.toCSV());
+        if (interactionDatabase.update(id, updatedInteraction)) {
+            System.out.println("Update " + id + " successfully.");
+            return;
+        }
+        System.out.println("Error occurred when updating a lead.");
     }
 
     private static void deleteLead() {

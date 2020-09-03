@@ -1,4 +1,6 @@
-package menu;
+package validator;
+
+import validator.IValidator;
 
 public class RequiredValidator implements IValidator {
     @Override

@@ -1,6 +1,6 @@
-package menu;
+package validator;
 
-import com.company.DateParser;
+import util.DateParser;
 
 import java.text.ParseException;
 
