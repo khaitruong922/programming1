@@ -1,9 +1,9 @@
 package menu;
 
 public class Option {
-    private String label;
-    private String toggleKey;
-    private ICommand command;
+    private final String label;
+    private final String toggleKey;
+    private final ICommand command;
 
     public Option(String label, String toggleKey, ICommand command) {
         this.label = label;

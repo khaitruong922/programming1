@@ -1,11 +1,11 @@
-package menu;
+package validator;
 
-import com.company.DateParser;
+import util.DateParser;
 
 import java.text.ParseException;
 
 public class DateValidator implements IValidator {
-    private boolean required;
+    private final boolean required;
 
     public DateValidator() {
         this.required = true;

@@ -3,9 +3,9 @@ package menu;
 import java.lang.reflect.Field;
 
 public class TableFormatter {
-    private String[] labels;
-    private String[][] rows;
-    private static String sep = " | ";
+    private final String[] labels;
+    private final String[][] rows;
+    private static final String sep = " | ";
     public TableFormatter(String[] labels, String[][] rows) {
         this.labels = labels;
         this.rows = rows;
