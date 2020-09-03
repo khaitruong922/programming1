@@ -108,6 +108,7 @@ public class MainMenu {
 
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
+
         String name = new InputField("Name: ", "Please type in a name").next(new RequiredValidator());
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
         Date birthDate = null;
@@ -121,14 +122,9 @@ public class MainMenu {
         String phone = new InputField("Phone: ").next();
         String email = new InputField("Email: ").next();
         String address = new InputField("Address: ").next();
-        Lead lead = new Lead(Lead.idPrefix + leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
-        try {
-            leadDatabase.add(lead);
-            System.out.println("Lead added successfully");
-        } catch (IOException e) {
-            System.out.println("Error occurred when adding a lead.");
-            e.printStackTrace();
-        }
+        Lead lead = new Lead(Lead.idPrefix + leadDatabase.getNextIdNumber(), name, birthDate, isMale, phone, email, address);
+        leadDatabase.add(lead);
+        System.out.println("Lead added successfully");
         System.out.println("Error occurred when adding a lead.");
 
 
