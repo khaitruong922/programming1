@@ -48,42 +48,49 @@ public class MainMenu {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all leads", "1", () -> {
             viewLeads();
+            startLeadMenu();
         }));
         optionMenu.add(new Option("Add a lead", "2", () -> {
             addLead();
+            startLeadMenu();
         }));
         optionMenu.add(new Option("Update a lead", "3", () -> {
             updateLead();
+            startLeadMenu();
         }));
         optionMenu.add(new Option("Delete a lead", "4", () -> {
             deleteLead();
+            startLeadMenu();
         }));
         optionMenu.add(new Option("Back", "5", () -> {
+            startMainMenu();
         }));
         optionMenu.start();
-        // Always go back to main menu after finishing a task
-        startMainMenu();
     }
 
     private static void startInteractionMenu() {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all interactions", "1", () -> {
             viewInteractions();
+            startInteractionMenu();
         }));
         optionMenu.add(new Option("Add an interaction", "2", () -> {
             addInteraction();
+            startInteractionMenu();
         }));
         optionMenu.add(new Option("Update an interaction", "3", () -> {
             updateInteraction();
+            startInteractionMenu();
         }));
         optionMenu.add(new Option("Delete an interaction", "4", () -> {
             deleteInteraction();
+            startInteractionMenu();
         }));
         optionMenu.add(new Option("Back", "5", () -> {
+            startMainMenu();
+
         }));
         optionMenu.start();
-        // Always go back to main menu after finishing a task
-        startMainMenu();
     }
 
     private static void viewLeads() {
@@ -116,18 +123,15 @@ public class MainMenu {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String genderInput = new InputField("Gender 0|female 1|male: ", "Invalid input").next(s -> s.equals("0") || s.equals("1"));
+        String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1.").next(s -> s.equals("0") || s.equals("1"));
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ").next();
-        String email = new InputField("Email: ").next();
-        String address = new InputField("Address: ").next();
-        Lead lead = new Lead(Lead.idPrefix + leadDatabase.getNextId(), name, birthDate, isMale, phone, email, address);
-        try {
-            leadDatabase.add(lead);
-            System.out.println("Lead added successfully");
-        } catch (IOException e) {
-            System.out.println("Error occurred when adding a lead.");
-            e.printStackTrace();
+        String phone = new InputField("Phone: ", "Please type in a phone number.").next(new RequiredValidator());
+        String email = new InputField("Email: ", "Please type in an email.").next(new RequiredValidator());
+        String address = new InputField("Address: ", "Please type in an address.").next(new RequiredValidator());
+        Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
+        if (leadDatabase.add(lead)) {
+            System.out.println("Lead added successfully with id " + id);
+            return;
         }
         System.out.println("Error occurred when adding a lead.");
 
@@ -143,7 +147,7 @@ public class MainMenu {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String leadId = new InputField("Lead ID: ", "Lead ID does not exist.").next();
+        String leadId = new InputField("Lead ID: ", "Lead ID does not exist.").next(s -> leadDatabase.hasId(s));
         String mean = new InputField("Mean: ", "Please type in a mean.").next(new RequiredValidator());
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive) : ", "Invalid input. Please type in 0 or 1 or 2.")
                 .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
@@ -162,7 +166,7 @@ public class MainMenu {
             }
         }
         Interaction interaction = new Interaction(id, interDate, leadId, mean, potential);
-        if (interactionDatabase.add(interaction)){
+        if (interactionDatabase.add(interaction)) {
             System.out.println("Interaction added successfully with id " + id);
             return;
         }
@@ -170,7 +174,38 @@ public class MainMenu {
     }
 
     private static void updateLead() {
-
+        String id = new InputField("Enter a lead ID to update: ", "").next();
+        if (!leadDatabase.hasId(id)) {
+            System.out.println(id + " does not exist.");
+            return;
+        }
+        String row = leadDatabase.getRow(id);
+        Lead lead = Lead.fromCSV(row);
+        System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
+        TableFormatter tableFormatter = new TableFormatter(Lead.fields, new String[][]{lead.toStringArray()});
+        tableFormatter.display();
+        String name = new InputField("Name: ").next();
+        name = !name.isEmpty() ? name : lead.getName();
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator(false));
+        Date birthDate = lead.getBirthDate();
+        try {
+            birthDate = DateParser.parse(birthDateInput);
+        } catch (ParseException e) {
+        }
+        String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1 or press enter to skip.").next(s -> s.equals("0") || s.equals("1") || s.isEmpty());
+        boolean isMale = lead.isMale();
+        if(!genderInput.isEmpty()){
+            isMale = genderInput.equals("1");
+        }
+        String phone = new InputField("Phone: ").next();
+        phone = !phone.isEmpty() ? phone : lead.getPhone();
+        String email = new InputField("Email: ").next();
+        email = !email.isEmpty() ? email : lead.getEmail();
+        String address = new InputField("Address: ").next();
+        address = !address.isEmpty() ? address : lead.getAddress();
+        Lead updatedLead = new Lead(id,name,birthDate,isMale,phone,email,address);
+        // update lead in CSV file
+        System.out.println(updatedLead.toCSV());
     }
 
     private static void updateInteraction() {
@@ -179,7 +214,11 @@ public class MainMenu {
 
     private static void deleteLead() {
         String id = new InputField("Enter a lead ID to delete: ", "").next();
-        if(leadDatabase.delete(id)){
+        if (!leadDatabase.hasId(id)) {
+            System.out.println(id + " does not exist.");
+            return;
+        }
+        if (leadDatabase.delete(id)) {
             System.out.println("Delete " + id + " successfully.");
             return;
         }
@@ -189,9 +228,12 @@ public class MainMenu {
     }
 
     private static void deleteInteraction() {
-
         String id = new InputField("Enter an interaction ID to delete: ", "").next();
-        if(interactionDatabase.delete(id)){
+        if (!interactionDatabase.hasId(id)) {
+            System.out.println(id + " does not exist.");
+            return;
+        }
+        if (interactionDatabase.delete(id)) {
             System.out.println("Delete " + id + " successfully.");
             return;
         }
