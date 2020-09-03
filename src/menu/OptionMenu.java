@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OptionMenu {
-    private ArrayList<Option> options = new ArrayList<>();
+    private final ArrayList<Option> options = new ArrayList<>();
 
     public void add(Option option) {
         options.add(option);
