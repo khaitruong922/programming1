@@ -115,6 +115,7 @@ public class MainMenu {
 
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
+
         String name = new InputField("Name: ", "Please type in a name").next(new RequiredValidator());
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
         Date birthDate = null;
@@ -213,7 +214,49 @@ public class MainMenu {
     }
 
     private static void updateInteraction() {
-
+        String id = new InputField("Enter a inter ID to update: ", "").next();
+        if (!interactionDatabase.hasId(id)) {
+            System.out.println(id + " does not exist.");
+            return;
+        }
+        String row = interactionDatabase.getRow(id);
+        Interaction interaction = Interaction.fromCSV(row);
+        System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
+        TableFormatter tableFormatter = new TableFormatter(Interaction.fields, new String[][]{interaction.toStringArray()});
+        tableFormatter.display();
+        String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator(false));
+        Date interactionDate = interaction.getInteractionDate();
+        try {
+            interactionDate = DateParser.parse(interactionDateInput);
+        } catch (ParseException e) {
+        }
+        String leadID = new InputField("Enter new lead ID: ","lead id not found").next(s -> leadDatabase.hasId(s)||s.isEmpty());
+        leadID = !leadID.isEmpty()? leadID : interaction.getLeadId();
+        String mean = new InputField("Mean: ").next();
+        mean = !mean.isEmpty() ? mean : interaction.getMean();
+        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", "Invalid input. Please type in 0 or 1 or 2 or just enter to skip.")
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2") || s.equals(""));
+        switch (potential) {
+            case "0": {
+                potential = "negative";
+                break;
+            }
+            case "1": {
+                potential = "neutral";
+                break;
+            }
+            case "2": {
+                potential = "positive";
+                break;
+            }
+            case  "": {
+                potential = interaction.getPotential();
+                break;
+            }
+        }
+        Interaction updatedInteraction = new Interaction(interaction.getId(),interactionDate,leadID,mean,potential);
+        //print update interaction
+        System.out.println(updatedInteraction.toCSV());
     }
 
     private static void deleteLead() {
