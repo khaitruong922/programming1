@@ -24,6 +24,28 @@ public class Database {
         }
     }
 
+    public boolean update(String id, IDatabaseEntity databaseEntity) {
+        String[] rows = getAll();
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+            for (int i = 0; i < rows.length; i++) {
+                String row = rows[i];
+                String rowId = row.split(",")[0];
+                if (rowId.equals(id)) {
+                    fileWriter.write(databaseEntity.toCSV());
+                    continue;
+                }
+                fileWriter.write(row);
+                fileWriter.write("\n");
+            }
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public boolean delete(String id) {
         String[] rows = getAll();
         FileWriter fileWriter = null;

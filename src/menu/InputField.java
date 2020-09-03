@@ -3,7 +3,7 @@ package menu;
 import java.util.Scanner;
 
 public class InputField {
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     private String label;
     private String errorMessage;
 
