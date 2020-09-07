@@ -1,19 +1,5 @@
 package menu;
 
-import database.Database;
-import util.DateParser;
-import database.Interaction;
-import database.Lead;
-import validator.DateValidator;
-import validator.NameValidator;
-import validator.PhoneValidator;
-import validator.RequiredValidator;
-
-import javax.swing.*;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-
 public class MainMenu {
 
     public void startMainMenu() {
@@ -29,7 +15,6 @@ public class MainMenu {
         optionMenu.add(new Option("Exit", "3", () -> {
             System.out.println("Program exit");
         }));
-
         optionMenu.start();
     }
 }

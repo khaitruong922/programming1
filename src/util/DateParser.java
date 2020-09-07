@@ -8,14 +8,14 @@ public final class DateParser {
     private DateParser() {
     }
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
     public static Date parse(String s) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.parse(s);
     }
 
     public static String format(Date d) {
         if (d == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(d);
     }
 }
