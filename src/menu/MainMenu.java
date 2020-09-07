@@ -50,7 +50,7 @@ public class MainMenu {
             startLeadMenu();
         }));
         optionMenu.add(new Option("view number of leads by age groups", "5", () -> {
-            viewLeadsByAgeGroups();
+//            viewLeadsByAgeGroups();
         }));
         optionMenu.add(new Option("view all leads by age", "6", () -> {
             viewLeadsByAge();
@@ -292,26 +292,26 @@ public class MainMenu {
         System.out.println("Error occurred when deleting a lead.");
     }
 
-    private static void viewLeadsByAgeGroups() {
-        String[] leads = getLeads();
-        ArrayList<String[]> rows = new ArrayList<>();
-        for (String lead : leads) {
-            rows.add(Lead.fromCSV(lead).toStringArray());
-        }
-        String[] labels = new String[]{"Youngster 0- 10", "Teenager, undergraduate 11-20", "Adult 21 - 60", "seniors 60+"};
-        String[][] temp =  rows.toArray(new String[rows.size()][Lead.fields.length]);
-        for (int i = 0; i <rows.size() ; i++) {
-                System.out.println(temp[i][2]);
-        }
+//    private static void viewLeadsByAgeGroups() {
+//        String[] leads = getLeads();
+//        ArrayList<String[]> rows = new ArrayList<>();
+//        for (String lead : leads) {
+//            rows.add(Lead.fromCSV(lead).toStringArray());
+//        }
+//        String[] labels = new String[]{"Youngster 0- 10", "Teenager, undergraduate 11-20", "Adult 21 - 60", "seniors 60+"};
+//        String[][] temp =  rows.toArray(new String[rows.size()][Lead.fields.length]);
+//        for (int i = 0; i <rows.size() ; i++) {
+//                System.out.println(temp[i][2]);
+//        }
 //        TableFormatter tableFormatter = new TableFormatter(labels, rows.toArray(new String[rows.size()][labels.length]));
 //        tableFormatter.display();
 
-    }
+//    }
 
     private static void viewLeadsByAge() {
-        String dateInput1 = new InputField("Enter the start Date (yyyy-mm-dd): ", "invalid date format").next(new DateValidator());
+        String dateInput1 = new InputField("Enter the start Date (yyyy-mm-dd): ", true).next(new DateValidator());
         Date dateOfBirth1 = new Date();
-        String dateInput2 = new InputField("Enter the end Date (yyyy-mm-dd): ", "invalid date format").next(new DateValidator());
+        String dateInput2 = new InputField("Enter the end Date (yyyy-mm-dd): ", true).next(new DateValidator());
         Date dateOfBirth2 = new Date();
         try {
             dateOfBirth1 = DateParser.parse(dateInput1);
