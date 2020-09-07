@@ -16,14 +16,6 @@ public class MainMenu {
     private static final Database leadDatabase = new Database(Lead.fileName);
     private static final Database interactionDatabase = new Database(Interaction.fileName);
 
-    private static String[] getLeads() {
-        return leadDatabase.getAll();
-    }
-
-    private static String[] getInteractions() {
-        return interactionDatabase.getAll();
-    }
-
     public static void startMainMenu() {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("Lead Menu", "1", () -> {
@@ -95,41 +87,39 @@ public class MainMenu {
     }
 
     private static void viewLeads() {
-        String[] leads = getLeads();
-        ArrayList<String[]> rows = new ArrayList<>();
+        String[] leads = leadDatabase.getAll();
+        TableFormatter tableFormatter = new TableFormatter(Lead.fields);
         for (String lead : leads) {
-            rows.add(Lead.fromCSV(lead).toStringArray());
+            tableFormatter.addRow(Lead.fromCSV(lead).toStringArray());
         }
-        TableFormatter tableFormatter = new TableFormatter(Lead.fields, rows.toArray(new String[rows.size()][Lead.fields.length]));
         tableFormatter.display();
     }
 
     private static void viewInteractions() {
-        String[] interactions = getInteractions();
-        ArrayList<String[]> rows = new ArrayList<>();
+        String[] interactions = interactionDatabase.getAll();
+        TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
         for (String interaction : interactions) {
-            rows.add(Interaction.fromCSV(interaction).toStringArray());
+            tableFormatter.addRow(Interaction.fromCSV(interaction).toStringArray());
         }
-        TableFormatter tableFormatter = new TableFormatter(Interaction.fields, rows.toArray(new String[rows.size()][Interaction.fields.length]));
         tableFormatter.display();
     }
 
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
-        String name = new InputField("Name: ", "Please type in a name").next(new RequiredValidator());
-        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
+        String name = new InputField("Name: ").next();
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
         Date birthDate = null;
         try {
             birthDate = DateParser.parse(birthDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1.").next(s -> s.equals("0") || s.equals("1"));
+        String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ", "Please type in a phone number.").next(new RequiredValidator());
-        String email = new InputField("Email: ", "Please type in an email.").next(new RequiredValidator());
-        String address = new InputField("Address: ", "Please type in an address.").next(new RequiredValidator());
+        String phone = new InputField("Phone: ").next();
+        String email = new InputField("Email: ").next();
+        String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
         if (leadDatabase.add(lead)) {
             System.out.println("Lead added successfully with id " + id);
@@ -142,17 +132,18 @@ public class MainMenu {
 
     private static void addInteraction() {
         String id = Interaction.idPrefix + interactionDatabase.getNextIdNumber();
-        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator());
+        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
         Date interDate = null;
         try {
             interDate = DateParser.parse(interDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String leadId = new InputField("Lead ID: ", "Lead ID does not exist.").next(s -> leadDatabase.hasId(s));
-        String mean = new InputField("Mean: ", "Please type in a mean.").next(new RequiredValidator());
-        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive) : ", "Invalid input. Please type in 0 or 1 or 2.")
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
+        String leadId = new InputField("Lead ID: ").next(s -> leadDatabase.hasId(s), "Lead id does not exist.");
+        String mean = new InputField("Mean: ").next();
+        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive) : ")
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
+                        "Invalid input. Please type in 0 or 1 or 2.");
         switch (potential) {
             case "0": {
                 potential = "negative";
@@ -176,7 +167,7 @@ public class MainMenu {
     }
 
     private static void updateLead() {
-        String id = new InputField("Enter a lead ID to update: ", "").next();
+        String id = new InputField("Enter a lead ID to update: ").next();
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -184,26 +175,30 @@ public class MainMenu {
         String row = leadDatabase.getRow(id);
         Lead lead = Lead.fromCSV(row);
         System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
-        TableFormatter tableFormatter = new TableFormatter(Lead.fields, new String[][]{lead.toStringArray()});
+        TableFormatter tableFormatter = new TableFormatter(Lead.fields);
+        tableFormatter.addRow(lead.toStringArray());
         tableFormatter.display();
-        String name = new InputField("Name: ").next();
+        String name = new InputField("Name: ", false).next();
         name = !name.isEmpty() ? name : lead.getName();
-        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator(false));
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", false)
+                .next(new DateValidator(), "Invalid date format.");
         Date birthDate = lead.getBirthDate();
         try {
             birthDate = DateParser.parse(birthDateInput);
         } catch (ParseException e) {
         }
-        String genderInput = new InputField("Gender (0: female, 1: male) : ", "Invalid input. Please type 0 or 1 or press enter to skip.").next(s -> s.equals("0") || s.equals("1") || s.isEmpty());
+        String genderInput = new InputField("Gender (0: female, 1: male) : ", false)
+                .next(s -> s.equals("0") || s.equals("1") || s.isEmpty(),
+                        "Invalid input. Please type 0 or 1 or press enter to skip.");
         boolean isMale = lead.isMale();
         if (!genderInput.isEmpty()) {
             isMale = genderInput.equals("1");
         }
-        String phone = new InputField("Phone: ").next();
+        String phone = new InputField("Phone: ", false).next();
         phone = !phone.isEmpty() ? phone : lead.getPhone();
-        String email = new InputField("Email: ").next();
+        String email = new InputField("Email: ", false).next();
         email = !email.isEmpty() ? email : lead.getEmail();
-        String address = new InputField("Address: ").next();
+        String address = new InputField("Address: ", false).next();
         address = !address.isEmpty() ? address : lead.getAddress();
         Lead updatedLead = new Lead(id, name, birthDate, isMale, phone, email, address);
         // update lead in CSV file
@@ -215,7 +210,7 @@ public class MainMenu {
     }
 
     private static void updateInteraction() {
-        String id = new InputField("Enter a inter ID to update: ", "").next();
+        String id = new InputField("Enter a inter ID to update: ").next();
         if (!interactionDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -223,20 +218,25 @@ public class MainMenu {
         String row = interactionDatabase.getRow(id);
         Interaction interaction = Interaction.fromCSV(row);
         System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
-        TableFormatter tableFormatter = new TableFormatter(Interaction.fields, new String[][]{interaction.toStringArray()});
+        TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
+        tableFormatter.addRow(interaction.toStringArray());
         tableFormatter.display();
-        String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", "Invalid date format.").next(new DateValidator(false));
+        String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", false)
+                .next(new DateValidator(), "Invalid date format");
         Date interactionDate = interaction.getInteractionDate();
         try {
             interactionDate = DateParser.parse(interactionDateInput);
         } catch (ParseException e) {
         }
-        String leadId = new InputField("Enter lead ID: ", "Lead ID does not exist").next(s -> leadDatabase.hasId(s) || s.isEmpty());
+        String leadId = new InputField("Enter lead ID: ", false)
+                .next(s -> leadDatabase.hasId(s),
+                        "Lead ID does not exist");
         leadId = !leadId.isEmpty() ? leadId : interaction.getLeadId();
-        String mean = new InputField("Mean: ").next();
+        String mean = new InputField("Mean: ", false).next();
         mean = !mean.isEmpty() ? mean : interaction.getMean();
-        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", "Invalid input. Please type in 0 or 1 or 2 or just enter to skip.")
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2") || s.equals(""));
+        String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", false)
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
+                        "Invalid input. Please type in 0 or 1 or 2 or enter to skip.");
         switch (potential) {
             case "0": {
                 potential = "negative";
@@ -265,7 +265,7 @@ public class MainMenu {
     }
 
     private static void deleteLead() {
-        String id = new InputField("Enter a lead ID to delete: ", "").next();
+        String id = new InputField("Enter a lead ID to delete: ").next();
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -280,7 +280,7 @@ public class MainMenu {
     }
 
     private static void deleteInteraction() {
-        String id = new InputField("Enter an interaction ID to delete: ", "").next();
+        String id = new InputField("Enter an interaction ID to delete: ").next();
         if (!interactionDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
