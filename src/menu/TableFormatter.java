@@ -1,14 +1,19 @@
 package menu;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class TableFormatter {
     private final String[] labels;
-    private final String[][] rows;
+    private final ArrayList<String[]> rows = new ArrayList<>();
     private static final String sep = " | ";
-    public TableFormatter(String[] labels, String[][] rows) {
+
+    public TableFormatter(String[] labels) {
         this.labels = labels;
-        this.rows = rows;
+    }
+
+    public void addRow(String[] row) {
+        rows.add(row);
     }
 
     public void display() {
@@ -46,14 +51,16 @@ public class TableFormatter {
         }
         return length;
     }
-    public void printTableBorder(){
+
+    public void printTableBorder() {
         System.out.print(" ");
-        printMultiple("-",getWidth()-2);
+        printMultiple("-", getWidth() - 2);
         System.out.print(" ");
         System.out.println("");
     }
+
     public int getWidth() {
-        int width = (labels.length + 1)*sep.length();
+        int width = (labels.length + 1) * sep.length();
         for (int columnLength : getColumnsLength()) {
             width += columnLength;
         }
