@@ -51,13 +51,11 @@ public class MainMenu {
             deleteLead();
             startLeadMenu();
         }));
-        optionMenu.add(new Option("view number of leads by age groups", "5", () -> {
-//            viewLeadsByAgeGroups();
-        }));
-        optionMenu.add(new Option("view all leads by age", "6", () -> {
+        optionMenu.add(new Option("View leads by age", "5", () -> {
             viewLeadsByAge();
+            startLeadMenu();
         }));
-        optionMenu.add(new Option("Back", "7", () -> {
+        optionMenu.add(new Option("Back", "6", () -> {
             startMainMenu();
         }));
         optionMenu.start();
@@ -81,7 +79,15 @@ public class MainMenu {
             deleteInteraction();
             startInteractionMenu();
         }));
-        optionMenu.add(new Option("Back", "5", () -> {
+        optionMenu.add(new Option("View interactions by potential", "5", () -> {
+            viewInteractionsByPotential();
+            startInteractionMenu();
+        }));
+        optionMenu.add(new Option("View interactions by month", "6", () -> {
+            viewInteractionsByMonth();
+            startInteractionMenu();
+        }));
+        optionMenu.add(new Option("Back", "7", () -> {
             startMainMenu();
 
         }));
@@ -109,7 +115,7 @@ public class MainMenu {
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
-        String name = new InputField("Name: ").next(new NameValidator(), "Invalid name format");
+        String name = new InputField("Name: ").next(new NameValidator(), "Name can only contain characters and spaces only.");
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
         Date birthDate = null;
         try {
@@ -119,7 +125,7 @@ public class MainMenu {
         }
         String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ").next(new PhoneValidator(), "Invalid phone number format");
+        String phone = new InputField("Phone (7-12 digits): ").next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         String email = new InputField("Email: ").next();
         String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
@@ -174,14 +180,19 @@ public class MainMenu {
             System.out.println(id + " does not exist.");
             return;
         }
+
         String row = leadDatabase.getRow(id);
         Lead lead = Lead.fromCSV(row);
+
         System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
         TableFormatter tableFormatter = new TableFormatter(Lead.fields);
         tableFormatter.addRow(lead.toStringArray());
         tableFormatter.display();
-        String name = new InputField("Name: ", false).next();
+
+        String name = new InputField("Name: ", false)
+                .next(new NameValidator(), "Name can only contain characters and spaces only.");
         name = !name.isEmpty() ? name : lead.getName();
+
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", false)
                 .next(new DateValidator(), "Invalid date format.");
         Date birthDate = lead.getBirthDate();
@@ -189,6 +200,7 @@ public class MainMenu {
             birthDate = DateParser.parse(birthDateInput);
         } catch (ParseException e) {
         }
+
         String genderInput = new InputField("Gender (0: female, 1: male) : ", false)
                 .next(s -> s.equals("0") || s.equals("1") || s.isEmpty(),
                         "Invalid input. Please type 0 or 1 or press enter to skip.");
@@ -196,18 +208,23 @@ public class MainMenu {
         if (!genderInput.isEmpty()) {
             isMale = genderInput.equals("1");
         }
-        String phone = new InputField("Phone: ", false).next();
+
+        String phone = new InputField("Phone: ", false)
+                .next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         phone = !phone.isEmpty() ? phone : lead.getPhone();
+
         String email = new InputField("Email: ", false).next();
         email = !email.isEmpty() ? email : lead.getEmail();
+
         String address = new InputField("Address: ", false).next();
         address = !address.isEmpty() ? address : lead.getAddress();
+
         Lead updatedLead = new Lead(id, name, birthDate, isMale, phone, email, address);
-        // update lead in CSV file
         if (leadDatabase.update(id, updatedLead)) {
             System.out.println("Update " + id + " successfully");
             return;
         }
+
         System.out.println("Error occurred when updating a lead.");
     }
 
@@ -217,25 +234,32 @@ public class MainMenu {
             System.out.println(id + " does not exist.");
             return;
         }
+
         String row = interactionDatabase.getRow(id);
         Interaction interaction = Interaction.fromCSV(row);
+
         System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
         TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
         tableFormatter.addRow(interaction.toStringArray());
         tableFormatter.display();
+
         String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", false)
                 .next(new DateValidator(), "Invalid date format");
+
         Date interactionDate = interaction.getInteractionDate();
         try {
             interactionDate = DateParser.parse(interactionDateInput);
         } catch (ParseException e) {
         }
+
         String leadId = new InputField("Enter lead ID: ", false)
                 .next(s -> leadDatabase.hasId(s),
                         "Lead ID does not exist");
         leadId = !leadId.isEmpty() ? leadId : interaction.getLeadId();
+
         String mean = new InputField("Mean: ", false).next();
         mean = !mean.isEmpty() ? mean : interaction.getMean();
+
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", false)
                 .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
                         "Invalid input. Please type in 0 or 1 or 2 or enter to skip.");
@@ -257,12 +281,13 @@ public class MainMenu {
                 break;
             }
         }
+
         Interaction updatedInteraction = new Interaction(interaction.getId(), interactionDate, leadId, mean, potential);
-        //print update interaction
         if (interactionDatabase.update(id, updatedInteraction)) {
             System.out.println("Update " + id + " successfully.");
             return;
         }
+
         System.out.println("Error occurred when updating a lead.");
     }
 
@@ -294,34 +319,32 @@ public class MainMenu {
         System.out.println("Error occurred when deleting a lead.");
     }
 
-//    private static void viewLeadsByAgeGroups() {
-//        String[] leads = getLeads();
-//        ArrayList<String[]> rows = new ArrayList<>();
-//        for (String lead : leads) {
-//            rows.add(Lead.fromCSV(lead).toStringArray());
-//        }
-//        String[] labels = new String[]{"Youngster 0- 10", "Teenager, undergraduate 11-20", "Adult 21 - 60", "seniors 60+"};
-//        String[][] temp =  rows.toArray(new String[rows.size()][Lead.fields.length]);
-//        for (int i = 0; i <rows.size() ; i++) {
-//                System.out.println(temp[i][2]);
-//        }
-//        TableFormatter tableFormatter = new TableFormatter(labels, rows.toArray(new String[rows.size()][labels.length]));
-//        tableFormatter.display();
-
-//    }
-
     private static void viewLeadsByAge() {
-        String dateInput1 = new InputField("Enter the start Date (yyyy-mm-dd): ", true).next(new DateValidator());
-        Date dateOfBirth1 = new Date();
-        String dateInput2 = new InputField("Enter the end Date (yyyy-mm-dd): ", true).next(new DateValidator());
-        Date dateOfBirth2 = new Date();
+        String[] leads = leadDatabase.getAll();
+        String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
+        TableFormatter tableFormatter = new TableFormatter(labels);
+        for (String lead : leads) {
+            tableFormatter.addRow(Lead.fromCSV(lead).toStringArray());
+        }
+        tableFormatter.display();
+    }
+
+    private static void viewInteractionsByPotential() {
+
+    }
+
+    private static void viewInteractionsByMonth() {
+        String startDateInput = new InputField("Enter the start date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+        String endDateInput = new InputField("Enter the end date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+        Date startDate = null;
+        Date endDate = null;
         try {
-            dateOfBirth1 = DateParser.parse(dateInput1);
-            dateOfBirth2 = DateParser.parse(dateInput2);
+            startDate = DateParser.parse(startDateInput);
+            endDate = DateParser.parse(endDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(DateParser.format(dateOfBirth1) + " and " + DateParser.format(dateOfBirth2));
+        System.out.println(DateParser.format(startDate) + " and " + DateParser.format(endDate));
 
     }
 }
