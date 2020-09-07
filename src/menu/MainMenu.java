@@ -5,6 +5,8 @@ import util.DateParser;
 import database.Interaction;
 import database.Lead;
 import validator.DateValidator;
+import validator.NameValidator;
+import validator.PhoneValidator;
 import validator.RequiredValidator;
 
 import javax.swing.*;
@@ -107,7 +109,7 @@ public class MainMenu {
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
-        String name = new InputField("Name: ").next();
+        String name = new InputField("Name: ").next(new NameValidator(), "Invalid name format");
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
         Date birthDate = null;
         try {
@@ -117,7 +119,7 @@ public class MainMenu {
         }
         String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ").next();
+        String phone = new InputField("Phone: ").next(new PhoneValidator(), "Invalid phone number format");
         String email = new InputField("Email: ").next();
         String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
