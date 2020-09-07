@@ -5,8 +5,11 @@ import util.DateParser;
 import database.Interaction;
 import database.Lead;
 import validator.DateValidator;
+import validator.NameValidator;
+import validator.PhoneValidator;
 import validator.RequiredValidator;
 
+import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,7 +51,13 @@ public class MainMenu {
             deleteLead();
             startLeadMenu();
         }));
-        optionMenu.add(new Option("Back", "5", () -> {
+        optionMenu.add(new Option("view number of leads by age groups", "5", () -> {
+//            viewLeadsByAgeGroups();
+        }));
+        optionMenu.add(new Option("view all leads by age", "6", () -> {
+            viewLeadsByAge();
+        }));
+        optionMenu.add(new Option("Back", "7", () -> {
             startMainMenu();
         }));
         optionMenu.start();
@@ -100,7 +109,7 @@ public class MainMenu {
     private static void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
-        String name = new InputField("Name: ").next();
+        String name = new InputField("Name: ").next(new NameValidator(), "Invalid name format");
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
         Date birthDate = null;
         try {
@@ -110,7 +119,7 @@ public class MainMenu {
         }
         String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone: ").next();
+        String phone = new InputField("Phone: ").next(new PhoneValidator(), "Invalid phone number format");
         String email = new InputField("Email: ").next();
         String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
@@ -283,6 +292,36 @@ public class MainMenu {
             return;
         }
         System.out.println("Error occurred when deleting a lead.");
+    }
+
+//    private static void viewLeadsByAgeGroups() {
+//        String[] leads = getLeads();
+//        ArrayList<String[]> rows = new ArrayList<>();
+//        for (String lead : leads) {
+//            rows.add(Lead.fromCSV(lead).toStringArray());
+//        }
+//        String[] labels = new String[]{"Youngster 0- 10", "Teenager, undergraduate 11-20", "Adult 21 - 60", "seniors 60+"};
+//        String[][] temp =  rows.toArray(new String[rows.size()][Lead.fields.length]);
+//        for (int i = 0; i <rows.size() ; i++) {
+//                System.out.println(temp[i][2]);
+//        }
+//        TableFormatter tableFormatter = new TableFormatter(labels, rows.toArray(new String[rows.size()][labels.length]));
+//        tableFormatter.display();
+
+//    }
+
+    private static void viewLeadsByAge() {
+        String dateInput1 = new InputField("Enter the start Date (yyyy-mm-dd): ", true).next(new DateValidator());
+        Date dateOfBirth1 = new Date();
+        String dateInput2 = new InputField("Enter the end Date (yyyy-mm-dd): ", true).next(new DateValidator());
+        Date dateOfBirth2 = new Date();
+        try {
+            dateOfBirth1 = DateParser.parse(dateInput1);
+            dateOfBirth2 = DateParser.parse(dateInput2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(DateParser.format(dateOfBirth1) + " and " + DateParser.format(dateOfBirth2));
 
     }
 }

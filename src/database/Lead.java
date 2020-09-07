@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
-    public static Lead example = new Lead("lead_001", "Khai", new Date(), true, "090", "abc@a.com", "address");
     public static String fileName = "leads.csv";
     public static String idPrefix = "lead_";
     public static String[] fields = new String[]{"ID","Name","Birth date","Gender","Phone","Email","Address"};
