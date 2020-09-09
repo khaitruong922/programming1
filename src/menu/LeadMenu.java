@@ -8,6 +8,9 @@ import validator.EmailValidator;
 import validator.NameValidator;
 import validator.PhoneValidator;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Calendar;
 import java.util.Date;
 
 public class LeadMenu {
@@ -146,12 +149,20 @@ public class LeadMenu {
     }
 
     private void viewLeadsByAge() {
-        String[] leads = leadDatabase.getAll();
+        String[] rows = leadDatabase.getAll();
         String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
-        TableFormatter tableFormatter = new TableFormatter(labels);
-        for (String lead : leads) {
-            tableFormatter.addRow(Lead.fromCSV(lead).toStringArray());
+        for (String row:rows
+             ) {
+            Lead lead = Lead.fromCSV(row);
+            Calendar c = Calendar.getInstance();
+            c.setTime(lead.getBirthDate());
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int date = c.get(Calendar.DATE);
+            Period diff = Period.between(LocalDate.of(year,month,date), LocalDate.now());
+            System.out.println(diff.getYears());
         }
+        TableFormatter tableFormatter = new TableFormatter(labels);
         tableFormatter.display();
     }
 }
