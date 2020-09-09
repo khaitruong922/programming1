@@ -22,8 +22,4 @@ public class Option {
     public String getToggleKey() {
         return toggleKey;
     }
-
-    public String getTitle() {
-        return toggleKey + ". " + label;
-    }
 }
