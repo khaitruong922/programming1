@@ -3,7 +3,6 @@ package menu;
 import database.Database;
 import database.Interaction;
 import database.Lead;
-import main.Main;
 import util.DateParser;
 import validator.DateValidator;
 

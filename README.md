@@ -1,0 +1,1 @@
+To start using the program, go to src/main and run the Main class.
