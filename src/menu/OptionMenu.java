@@ -7,6 +7,8 @@ import java.util.Scanner;
 public class OptionMenu {
     private final ArrayList<Option> options = new ArrayList<>();
 
+    private static String[] fields = new String[]{"Input", "Operation"};
+
     public void add(Option option) {
         options.add(option);
     }
@@ -16,9 +18,11 @@ public class OptionMenu {
     }
 
     private void displayOptions() {
+        TableFormatter tableFormatter = new TableFormatter(fields);
         for (Option option : options) {
-            System.out.println(option.getTitle());
+            tableFormatter.addRow(new String[]{option.getToggleKey(), option.getLabel()});
         }
+        tableFormatter.display();
         System.out.print("Enter an option: ");
     }
 

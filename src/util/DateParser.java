@@ -10,6 +10,7 @@ public final class DateParser {
 
     public static Date parse(String s) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
         return sdf.parse(s);
     }
 
