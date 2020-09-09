@@ -40,6 +40,26 @@ public class Interaction implements IDatabaseEntity {
         return potential;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setInteractionDate(Date interactionDate) {
+        this.interactionDate = interactionDate;
+    }
+
+    public void setLeadId(String leadId) {
+        this.leadId = leadId;
+    }
+
+    public void setMean(String mean) {
+        this.mean = mean;
+    }
+
+    public void setPotential(String potential) {
+        this.potential = potential;
+    }
+
     public static Interaction fromCSV(String row){
         String[] fields = row.split(",");
         String id = fields[0];

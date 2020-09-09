@@ -13,7 +13,7 @@ public class MainMenu {
             interactionMenu.startInteractionMenu();
         }));
         optionMenu.add(new Option("Exit", "3", () -> {
-            System.out.println("Program exit");
+            System.out.println("Program exit.");
         }));
         optionMenu.start();
     }
