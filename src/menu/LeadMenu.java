@@ -66,7 +66,8 @@ public class LeadMenu {
         String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
         boolean isMale = genderInput.equals("1");
         String phone = new InputField("Phone (7-12 digits): ").next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
-        String email = new InputField("Email: ").next(new EmailValidator(),"email invalid");
+        String email = new InputField("Email: ")
+                .next(new EmailValidator(),"Invalid email format.");
         String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
         if (leadDatabase.add(lead)) {
@@ -116,7 +117,8 @@ public class LeadMenu {
                 .next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         phone = !phone.isEmpty() ? phone : lead.getPhone();
 
-        String email = new InputField("Email: ", false).next();
+        String email = new InputField("Email: ", false)
+                .next(new EmailValidator(),"Invalid email format.");
         email = !email.isEmpty() ? email : lead.getEmail();
 
         String address = new InputField("Address: ", false).next();
