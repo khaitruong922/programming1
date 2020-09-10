@@ -4,10 +4,7 @@ import database.Database;
 import database.Interaction;
 import database.Lead;
 import util.DateParser;
-import validator.DateValidator;
-import validator.EmailValidator;
-import validator.NameValidator;
-import validator.PhoneValidator;
+import validator.*;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -18,6 +15,7 @@ import java.util.Date;
 
 public class LeadMenu {
     private final Database leadDatabase = new Database(Lead.fileName);
+    private final Database interactionDatabase = new Database(Interaction.fileName);
 
     public void startLeadMenu() {
         OptionMenu optionMenu = new OptionMenu();
@@ -156,8 +154,23 @@ public class LeadMenu {
             System.out.println(id + " does not exist.");
             return;
         }
+        // Check if lead involves in interaction
+        String[] interactionLeads = interactionDatabase.getColumn(2);
+        int leadInteractionCount = 0;
+        for (String interactionLead : interactionLeads) {
+            if (interactionLead.equals(id)) {
+                leadInteractionCount++;
+            }
+        }
+        if (leadInteractionCount > 0) {
+            System.out.println(id + " is involved in " + leadInteractionCount + " interaction(s). Delete this lead will also delete interactions that involve this lead.");
+            String input = new InputField("Type y to confirm deletion, n to cancel: ").next(s -> s.equals("y") || s.equals("n"));
+            if (input.equals("n")) return;
+        }
+
         if (leadDatabase.delete(id)) {
             System.out.println("Delete " + id + " successfully.");
+            interactionDatabase.deleteMatch(id, 2);
             return;
         }
         System.out.println("Error occurred when deleting a lead.");

@@ -47,7 +47,7 @@ public class Database {
         }
     }
 
-    public boolean delete(String id) {
+    public boolean deleteMatch(String s, int columnIndex) {
         createFile();
         String[] rows = getAll();
         FileWriter fileWriter = null;
@@ -55,8 +55,8 @@ public class Database {
             fileWriter = new FileWriter(fileName);
             for (int i = 0; i < rows.length; i++) {
                 String row = rows[i];
-                String rowId = row.split(",")[0];
-                if (rowId.equals(id)) continue;
+                String value = row.split(",")[columnIndex];
+                if (value.equals(s)) continue;
                 fileWriter.write(row);
                 fileWriter.write("\n");
             }
@@ -65,6 +65,10 @@ public class Database {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public boolean delete(String id) {
+        return deleteMatch(id, 0);
 
     }
 
@@ -83,13 +87,17 @@ public class Database {
         return rows.toArray(new String[rows.size()]);
     }
 
-    public String[] getAllIds() {
+    public String[] getColumn(int columnIndex) {
         String[] rows = getAll();
-        String[] ids = new String[rows.length];
+        String[] values = new String[rows.length];
         for (int i = 0; i < rows.length; i++) {
-            ids[i] = (rows[i].split(",")[0]);
+            values[i] = (rows[i].split(",")[columnIndex]);
         }
-        return ids;
+        return values;
+    }
+
+    public String[] getAllIds() {
+        return getColumn(0);
     }
 
     public boolean hasId(String id) {
