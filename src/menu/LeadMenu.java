@@ -10,6 +10,10 @@ import validator.NameValidator;
 import validator.PhoneValidator;
 
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class LeadMenu {
@@ -160,12 +164,38 @@ public class LeadMenu {
     }
 
     private void viewLeadsByAge() {
-        String[] leads = leadDatabase.getAll();
+        String[] rows = leadDatabase.getAll();
         String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
-        TableFormatter tableFormatter = new TableFormatter(labels);
-        for (String lead : leads) {
-            tableFormatter.addRow(Lead.fromCSV(lead).toStringArray());
+        ArrayList<Integer> ages = new ArrayList<Integer>();
+        int count1 =0;
+        int count2 =0;
+        int count3 =0;
+        int count4 =0;
+        for (String row:rows
+             ) {
+            Lead lead = Lead.fromCSV(row);
+            Calendar c = Calendar.getInstance();
+            c.setTime(lead.getBirthDate());
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int date = c.get(Calendar.DATE);
+            Period diff = Period.between(LocalDate.of(year,month,date), LocalDate.now());
+            ages.add(diff.getYears());
         }
+        for (int i = 0; i <ages.size() ; i++) {
+          if (ages.get(i)<11){
+              count1++;
+          } else if (ages.get(i)<21){
+              count2++;
+          } else if (ages.get(i)<61){
+              count3++;
+          } else {
+              count4++;
+          }
+        }
+        String[] ageGroupsValue = new String[]{Integer.toString(count1),Integer.toString(count2),Integer.toString(count3),Integer.toString(count4)};
+        TableFormatter tableFormatter = new TableFormatter(labels);
+        tableFormatter.addRow(ageGroupsValue);
         tableFormatter.display();
     }
 }
