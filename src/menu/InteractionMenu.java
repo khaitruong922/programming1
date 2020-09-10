@@ -193,7 +193,30 @@ public class InteractionMenu {
 
 
     private void viewInteractionsByPotential() {
+        Date startDate = askStartDate();
+        Date endDate = askEndDate(startDate);
+        HashMap<String, Integer> potentialCounter = new HashMap<>();
+        potentialCounter.put("negative", 0);
+        potentialCounter.put("neutral", 0);
+        potentialCounter.put("positive", 0);
+        String[] rows = interactionDatabase.getAll();
+        for (String row : rows) {
+            Interaction interaction = Interaction.fromCSV(row);
+            Date interactionDate = interaction.getInteractionDate();
+            // Skip if the interaction date is not between start and end date.
+            if (interactionDate.getTime() < startDate.getTime()) continue;
+            if (interactionDate.getTime() > endDate.getTime()) continue;
+            String potential = interaction.getPotential();
+            if (potentialCounter.containsKey(potential)) {
+                potentialCounter.put(potential, potentialCounter.get(potential) + 1);
+            }
+        }
+        TableFormatter tableFormatter = new TableFormatter(new String[]{"Potential", "Interactions"});
+        tableFormatter.addRow(new String[]{"Negative", Integer.toString(potentialCounter.get("negative"))});
+        tableFormatter.addRow(new String[]{"Neutral", Integer.toString(potentialCounter.get("neutral"))});
+        tableFormatter.addRow(new String[]{"Positive", Integer.toString(potentialCounter.get("positive"))});
 
+        tableFormatter.display();
     }
 
     private void viewInteractionsByMonth() {
