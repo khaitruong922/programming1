@@ -88,6 +88,9 @@ public class InteractionMenu {
         Interaction interaction = new Interaction(id, interDate, leadId, mean, potential);
         if (interactionDatabase.add(interaction)) {
             System.out.println("Interaction added successfully with id " + id);
+            TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
+            tableFormatter.addRow(interaction.toStringArray());
+            tableFormatter.display();
             return;
         }
         System.out.println("Error occurred when adding an interaction.");
@@ -118,13 +121,17 @@ public class InteractionMenu {
         } catch (ParseException e) {
         }
 
+        interaction.setInteractionDate(interactionDate);
+
         String leadId = new InputField("Enter lead ID: ", false)
                 .next(s -> leadDatabase.hasId(s),
                         "Lead ID does not exist");
         leadId = !leadId.isEmpty() ? leadId : interaction.getLeadId();
+        interaction.setLeadId(leadId);
 
         String mean = new InputField("Mean: ", false).next();
         mean = !mean.isEmpty() ? mean : interaction.getMean();
+        interaction.setMean(mean);
 
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", false)
                 .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
@@ -147,10 +154,13 @@ public class InteractionMenu {
                 break;
             }
         }
+        interaction.setPotential(potential);
 
-        Interaction updatedInteraction = new Interaction(interaction.getId(), interactionDate, leadId, mean, potential);
-        if (interactionDatabase.update(id, updatedInteraction)) {
+        if (interactionDatabase.update(id, interaction)) {
             System.out.println("Update " + id + " successfully.");
+            TableFormatter updatedTableFormatter = new TableFormatter(Interaction.fields);
+            updatedTableFormatter.addRow(interaction.toStringArray());
+            updatedTableFormatter.display();
             return;
         }
 

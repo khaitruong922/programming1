@@ -1,12 +1,14 @@
 package menu;
 
 import database.Database;
+import database.Interaction;
 import database.Lead;
 import util.DateParser;
 import validator.DateValidator;
 import validator.EmailValidator;
 import validator.NameValidator;
 import validator.PhoneValidator;
+
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -70,11 +72,15 @@ public class LeadMenu {
         boolean isMale = genderInput.equals("1");
         String phone = new InputField("Phone (7-12 digits): ").next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         String email = new InputField("Email: ")
-                .next(new EmailValidator(),"Invalid email format.");
+                .next(new EmailValidator(), "Invalid email format.");
         String address = new InputField("Address: ").next();
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
         if (leadDatabase.add(lead)) {
             System.out.println("Lead added successfully with id " + id);
+            TableFormatter tableFormatter = new TableFormatter(Lead.fields);
+            tableFormatter.addRow(lead.toStringArray());
+            tableFormatter.display();
+
             return;
         }
         System.out.println("Error occurred when adding a lead.");
@@ -99,6 +105,7 @@ public class LeadMenu {
         String name = new InputField("Name: ", false)
                 .next(new NameValidator(), "Name can only contain characters and spaces only.");
         name = !name.isEmpty() ? name : lead.getName();
+        lead.setName(name);
 
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", false)
                 .next(new DateValidator(), "Invalid date format.");
@@ -107,6 +114,7 @@ public class LeadMenu {
             birthDate = DateParser.parse(birthDateInput);
         } catch (ParseException e) {
         }
+        lead.setBirthDate(birthDate);
 
         String genderInput = new InputField("Gender (0: female, 1: male) : ", false)
                 .next(s -> s.equals("0") || s.equals("1") || s.isEmpty(),
@@ -115,21 +123,27 @@ public class LeadMenu {
         if (!genderInput.isEmpty()) {
             isMale = genderInput.equals("1");
         }
+        lead.setMale(isMale);
 
         String phone = new InputField("Phone: ", false)
                 .next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         phone = !phone.isEmpty() ? phone : lead.getPhone();
+        lead.setPhone(phone);
 
         String email = new InputField("Email: ", false)
-                .next(new EmailValidator(),"Invalid email format.");
+                .next(new EmailValidator(), "Invalid email format.");
         email = !email.isEmpty() ? email : lead.getEmail();
+        lead.setEmail(email);
 
         String address = new InputField("Address: ", false).next();
         address = !address.isEmpty() ? address : lead.getAddress();
+        lead.setAddress(address);
 
-        Lead updatedLead = new Lead(id, name, birthDate, isMale, phone, email, address);
-        if (leadDatabase.update(id, updatedLead)) {
-            System.out.println("Update " + id + " successfully");
+        if (leadDatabase.update(id, lead)) {
+            System.out.println("Update " + id + " successfully.");
+            TableFormatter updatedTableFormatter = new TableFormatter(Lead.fields);
+            updatedTableFormatter.addRow(lead.toStringArray());
+            updatedTableFormatter.display();
             return;
         }
 

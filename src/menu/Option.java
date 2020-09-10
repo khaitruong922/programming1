@@ -4,6 +4,7 @@ public class Option {
     private final String label;
     private final String toggleKey;
     private final ICommand command;
+    public static String[] fields = new String[]{"Input", "Operation"};
 
     public Option(String label, String toggleKey, ICommand command) {
         this.label = label;
