@@ -12,6 +12,7 @@ public class Database {
     }
 
     public boolean add(IDatabaseEntity databaseEntity) {
+        createFile();
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(fileName, true);
@@ -24,6 +25,7 @@ public class Database {
     }
 
     public boolean update(String id, IDatabaseEntity databaseEntity) {
+        createFile();
         String[] rows = getAll();
         FileWriter fileWriter = null;
         try {
@@ -46,6 +48,7 @@ public class Database {
     }
 
     public boolean delete(String id) {
+        createFile();
         String[] rows = getAll();
         FileWriter fileWriter = null;
         try {
@@ -67,7 +70,7 @@ public class Database {
 
     public String[] getAll() {
         ArrayList<String> rows = new ArrayList<String>();
-        File file = new File(fileName);
+        File file = createFile();
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
@@ -75,18 +78,18 @@ public class Database {
                 rows.add(sc.nextLine());
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(fileName + " not found.");
         }
         return rows.toArray(new String[rows.size()]);
     }
 
     public String[] getAllIds() {
-        ArrayList<String> ids = new ArrayList<>();
         String[] rows = getAll();
+        String[] ids = new String[rows.length];
         for (int i = 0; i < rows.length; i++) {
-            ids.add(rows[i].split(",")[0]);
+            ids[i] = (rows[i].split(",")[0]);
         }
-        return ids.toArray(new String[ids.size()]);
+        return ids;
     }
 
     public boolean hasId(String id) {
@@ -100,7 +103,7 @@ public class Database {
     }
 
     public String getRow(String id) {
-        File file = new File(fileName);
+        File file = createFile();
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
@@ -119,7 +122,7 @@ public class Database {
     }
 
     public String getLastRow() {
-        File file = new File(fileName);
+        File file = createFile();
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
@@ -145,5 +148,16 @@ public class Database {
         String number = idData[1];
         int nextNumber = Integer.parseInt(number) + 1;
         return String.format("%03d", nextNumber);
+    }
+
+    private File createFile() {
+        File file = new File(fileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+
     }
 }
