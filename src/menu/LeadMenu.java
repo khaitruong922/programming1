@@ -21,22 +21,27 @@ public class LeadMenu {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all leads", "1", () -> {
             viewLeads();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Add a lead", "2", () -> {
             addLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Update a lead", "3", () -> {
             updateLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Delete a lead", "4", () -> {
             deleteLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("View leads by age", "5", () -> {
             viewLeadsByAge();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Back", "6", () -> {
@@ -212,5 +217,8 @@ public class LeadMenu {
         TableFormatter tableFormatter = new TableFormatter(labels);
         tableFormatter.addRow(strLeadCounts);
         tableFormatter.display();
+    }
+    private void waitForEnter(){
+        new InputField("Press Enter to continue. ",false).next();
     }
 }
