@@ -166,36 +166,38 @@ public class LeadMenu {
     private void viewLeadsByAge() {
         String[] rows = leadDatabase.getAll();
         String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
-        ArrayList<Integer> ages = new ArrayList<Integer>();
-        int count1 =0;
-        int count2 =0;
-        int count3 =0;
-        int count4 =0;
-        for (String row:rows
-             ) {
+        int[] leadCounts = new int[labels.length];
+        for (String row : rows
+        ) {
             Lead lead = Lead.fromCSV(row);
             Calendar c = Calendar.getInstance();
             c.setTime(lead.getBirthDate());
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int date = c.get(Calendar.DATE);
-            Period diff = Period.between(LocalDate.of(year,month,date), LocalDate.now());
-            ages.add(diff.getYears());
+            Period diff = Period.between(LocalDate.of(year, month, date), LocalDate.now());
+            int age = diff.getYears();
+            if (age < 10) {
+                leadCounts[0] += 1;
+                continue;
+            }
+            if (age < 20) {
+                leadCounts[1] += 1;
+                continue;
+            }
+            if (age < 60) {
+                leadCounts[2] += 1;
+                continue;
+            }
+            // Only runs when lead age is over 60
+            leadCounts[3] += 1;
         }
-        for (int i = 0; i <ages.size() ; i++) {
-          if (ages.get(i)<11){
-              count1++;
-          } else if (ages.get(i)<21){
-              count2++;
-          } else if (ages.get(i)<61){
-              count3++;
-          } else {
-              count4++;
-          }
+        String[] strLeadCounts = new String[leadCounts.length];
+        for (int i = 0; i < leadCounts.length; i++) {
+            strLeadCounts[i] = Integer.toString(leadCounts[i]);
         }
-        String[] ageGroupsValue = new String[]{Integer.toString(count1),Integer.toString(count2),Integer.toString(count3),Integer.toString(count4)};
         TableFormatter tableFormatter = new TableFormatter(labels);
-        tableFormatter.addRow(ageGroupsValue);
+        tableFormatter.addRow(strLeadCounts);
         tableFormatter.display();
     }
 }
