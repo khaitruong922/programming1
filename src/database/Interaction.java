@@ -3,13 +3,14 @@ package database;
 import util.DateParser;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Interaction implements IDatabaseEntity {
-    public static Interaction example = new Interaction("inter_001",new Date(),"001","facebook","negative");
+    public static Interaction example = new Interaction("inter_001", new Date(), "001", "facebook", "negative");
     public static String fileName = "interactions.csv";
     public static String idPrefix = "inter_";
-    public static String[] fields = new String[]{"ID","Interaction date","Lead ID","Mean","Potential"};
+    public static String[] fields = new String[]{"ID", "Interaction date", "Lead ID", "Mean", "Potential"};
     private String id;
     private Date interactionDate;// like lead
     private String leadId;
@@ -27,15 +28,19 @@ public class Interaction implements IDatabaseEntity {
     public String getId() {
         return id;
     }
+
     public Date getInteractionDate() {
         return interactionDate;
     }
+
     public String getLeadId() {
         return leadId;
     }
+
     public String getMean() {
         return mean;
     }
+
     public String getPotential() {
         return potential;
     }
@@ -60,7 +65,7 @@ public class Interaction implements IDatabaseEntity {
         this.potential = potential;
     }
 
-    public static Interaction fromCSV(String row){
+    public static Interaction fromCSV(String row) {
         String[] fields = row.split(",");
         String id = fields[0];
         Date interactionDate = null;
@@ -72,13 +77,16 @@ public class Interaction implements IDatabaseEntity {
         String leadId = fields[2];
         String mean = fields[3];
         String potential = fields[4];
-        return new Interaction(id,interactionDate,leadId,mean,potential);
+        return new Interaction(id, interactionDate, leadId, mean, potential);
     }
+
     @Override
     public String toCSV() {
-        return String.join(",",id,DateParser.format(interactionDate),leadId,mean,potential)+"\n";
+        return String.join(",", id, DateParser.format(interactionDate), leadId, mean, potential) + "\n";
     }
-    public String[] toStringArray(){
-        return new String[]{id,DateParser.format(interactionDate),leadId,mean,potential};
+
+    public String[] toStringArray() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        return new String[]{id, simpleDateFormat.format(interactionDate), leadId, mean, potential};
     }
 }

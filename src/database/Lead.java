@@ -3,6 +3,7 @@ package database;
 import util.DateParser;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Lead implements IDatabaseEntity {
@@ -106,7 +107,8 @@ public class Lead implements IDatabaseEntity {
     }
 
     public String[] toStringArray() {
-        return new String[]{id, name, DateParser.format(birthDate), isMale ? "Male" : "Female", phone, email, address};
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        return new String[]{id, name, simpleDateFormat.format(birthDate), isMale ? "Male" : "Female", phone, email, address};
     }
 
 }
