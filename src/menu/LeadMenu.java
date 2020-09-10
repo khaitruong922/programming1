@@ -4,10 +4,7 @@ import database.Database;
 import database.Interaction;
 import database.Lead;
 import util.DateParser;
-import validator.DateValidator;
-import validator.EmailValidator;
-import validator.NameValidator;
-import validator.PhoneValidator;
+import validator.*;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -18,27 +15,33 @@ import java.util.Date;
 
 public class LeadMenu {
     private final Database leadDatabase = new Database(Lead.fileName);
+    private final Database interactionDatabase = new Database(Interaction.fileName);
 
     public void startLeadMenu() {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all leads", "1", () -> {
             viewLeads();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Add a lead", "2", () -> {
             addLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Update a lead", "3", () -> {
             updateLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Delete a lead", "4", () -> {
             deleteLead();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("View leads by age", "5", () -> {
             viewLeadsByAge();
+            waitForEnter();
             startLeadMenu();
         }));
         optionMenu.add(new Option("Back", "6", () -> {
@@ -156,8 +159,23 @@ public class LeadMenu {
             System.out.println(id + " does not exist.");
             return;
         }
+        // Check if lead involves in interaction
+        String[] interactionLeads = interactionDatabase.getColumn(2);
+        int leadInteractionCount = 0;
+        for (String interactionLead : interactionLeads) {
+            if (interactionLead.equals(id)) {
+                leadInteractionCount++;
+            }
+        }
+        if (leadInteractionCount > 0) {
+            System.out.println(id + " is involved in " + leadInteractionCount + " interaction(s). Delete this lead will also delete interactions that involve this lead.");
+            String input = new InputField("Type y to confirm deletion, n to cancel: ").next(s -> s.equals("y") || s.equals("n"));
+            if (input.equals("n")) return;
+        }
+
         if (leadDatabase.delete(id)) {
             System.out.println("Delete " + id + " successfully.");
+            interactionDatabase.deleteMatch(id, 2);
             return;
         }
         System.out.println("Error occurred when deleting a lead.");
@@ -166,36 +184,41 @@ public class LeadMenu {
     private void viewLeadsByAge() {
         String[] rows = leadDatabase.getAll();
         String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
-        ArrayList<Integer> ages = new ArrayList<Integer>();
-        int count1 =0;
-        int count2 =0;
-        int count3 =0;
-        int count4 =0;
-        for (String row:rows
-             ) {
+        int[] leadCounts = new int[labels.length];
+        for (String row : rows
+        ) {
             Lead lead = Lead.fromCSV(row);
             Calendar c = Calendar.getInstance();
             c.setTime(lead.getBirthDate());
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int date = c.get(Calendar.DATE);
-            Period diff = Period.between(LocalDate.of(year,month,date), LocalDate.now());
-            ages.add(diff.getYears());
+            Period diff = Period.between(LocalDate.of(year, month, date), LocalDate.now());
+            int age = diff.getYears();
+            if (age < 10) {
+                leadCounts[0] += 1;
+                continue;
+            }
+            if (age < 20) {
+                leadCounts[1] += 1;
+                continue;
+            }
+            if (age < 60) {
+                leadCounts[2] += 1;
+                continue;
+            }
+            // Only runs when lead age is over 60
+            leadCounts[3] += 1;
         }
-        for (int i = 0; i <ages.size() ; i++) {
-          if (ages.get(i)<11){
-              count1++;
-          } else if (ages.get(i)<21){
-              count2++;
-          } else if (ages.get(i)<61){
-              count3++;
-          } else {
-              count4++;
-          }
+        String[] strLeadCounts = new String[leadCounts.length];
+        for (int i = 0; i < leadCounts.length; i++) {
+            strLeadCounts[i] = Integer.toString(leadCounts[i]);
         }
-        String[] ageGroupsValue = new String[]{Integer.toString(count1),Integer.toString(count2),Integer.toString(count3),Integer.toString(count4)};
         TableFormatter tableFormatter = new TableFormatter(labels);
-        tableFormatter.addRow(ageGroupsValue);
+        tableFormatter.addRow(strLeadCounts);
         tableFormatter.display();
+    }
+    private void waitForEnter(){
+        new InputField("Press Enter to continue. ",false).next();
     }
 }

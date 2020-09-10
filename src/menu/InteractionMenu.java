@@ -17,26 +17,32 @@ public class InteractionMenu {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all interactions", "1", () -> {
             viewInteractions();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("Add an interaction", "2", () -> {
             addInteraction();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("Update an interaction", "3", () -> {
             updateInteraction();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("Delete an interaction", "4", () -> {
             deleteInteraction();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("View interactions by potential", "5", () -> {
             viewInteractionsByPotential();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("View interactions by month", "6", () -> {
             viewInteractionsByMonth();
+            waitForEnter();
             startInteractionMenu();
         }));
         optionMenu.add(new Option("Back", "7", () -> {
@@ -199,5 +205,9 @@ public class InteractionMenu {
         }
         System.out.println(DateParser.format(startDate) + " and " + DateParser.format(endDate));
 
+    }
+
+    private void waitForEnter(){
+        new InputField("Press Enter to continue. ",false).next();
     }
 }
