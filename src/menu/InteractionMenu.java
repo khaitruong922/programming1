@@ -7,7 +7,11 @@ import util.DateParser;
 import validator.DateValidator;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class InteractionMenu {
     private final Database interactionDatabase = new Database(Interaction.fileName);
@@ -193,21 +197,80 @@ public class InteractionMenu {
     }
 
     private void viewInteractionsByMonth() {
-        String startDateInput = new InputField("Enter the start date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
-        String endDateInput = new InputField("Enter the end date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+        Date startDate = askStartDate();
+        Date endDate = askEndDate(startDate);
+        String[] months = getMonthsBetweenTwoDates(startDate, endDate);
+        HashMap<String, Integer> interactionCounter = new HashMap<>();
+        for (String month : months) {
+            interactionCounter.put(month, 0);
+        }
+        String[] rows = interactionDatabase.getAll();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        for (String row : rows) {
+            Interaction interaction = Interaction.fromCSV(row);
+            Date interactionDate = interaction.getInteractionDate();
+            // Skip if the interaction date is not between start and end date.
+            if (interactionDate.getTime() < startDate.getTime()) continue;
+            if (interactionDate.getTime() > endDate.getTime()) continue;
+
+            String month = simpleDateFormat.format(interaction.getInteractionDate());
+            if (interactionCounter.containsKey(month)) {
+                interactionCounter.put(month, interactionCounter.get(month) + 1);
+            }
+        }
+        TableFormatter tableFormatter = new TableFormatter(new String[]{"Month", "Interactions"});
+        for (String month : months) {
+            tableFormatter.addRow(new String[]{month, Integer.toString(interactionCounter.get(month))});
+        }
+        tableFormatter.display();
+    }
+
+    private Date askStartDate() {
+        String startDateInput = new InputField("Enter start date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
         Date startDate = null;
-        Date endDate = null;
         try {
             startDate = DateParser.parse(startDateInput);
-            endDate = DateParser.parse(endDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(DateParser.format(startDate) + " and " + DateParser.format(endDate));
-
+        return startDate;
     }
 
-    private void waitForEnter(){
-        new InputField("Press Enter to continue. ",false).next();
+    private Date askEndDate(Date startDate) {
+        Date endDate = null;
+        do {
+            String endDateInput = new InputField("Enter end date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+            try {
+                endDate = DateParser.parse(endDateInput);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (endDate.getTime() < startDate.getTime()) {
+                System.out.println("End date should be after start date.");
+            }
+        }
+        while (endDate.getTime() < startDate.getTime());
+        return endDate;
+    }
+
+    private String[] getMonthsBetweenTwoDates(Date start, Date end) {
+        Calendar cStart = Calendar.getInstance();
+        cStart.setTime(start);
+        Calendar cEnd = Calendar.getInstance();
+        cEnd.setTime(end);
+        // Add 1 day to end date to include the end date in the calculation
+        cEnd.add(Calendar.DATE, 1);
+        ArrayList<String> months = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        while (cStart.before(cEnd)) {
+            months.add(simpleDateFormat.format(cStart.getTime()));
+            cStart.add(Calendar.MONTH, 1);
+            cStart.set(Calendar.DAY_OF_MONTH, 1);
+        }
+        return months.toArray(new String[months.size()]);
+    }
+
+    private void waitForEnter() {
+        new InputField("Press Enter to continue. ", false).next();
     }
 }

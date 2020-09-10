@@ -1,6 +1,6 @@
 inter_002,2020-01-20,lead_004,facebook,negative
-inter_003,2001-09-22,lead_007,facebook,neutral
-inter_005,2002-10-09,lead_004,twitter,positive
-inter_006,2001-10-09,lead_004,facebook,negative
-inter_007,0004-04-04,lead_009,rmit,negative
-inter_008,0004-04-04,lead_007,twitter,neutral
+inter_003,2020-06-01,lead_007,facebook,neutral
+inter_005,2020-05-15,lead_004,twitter,positive
+inter_006,2020-05-01,lead_004,facebook,negative
+inter_007,2020-04-15,lead_009,rmit,negative
+inter_008,2020-04-17,lead_007,twitter,neutral
