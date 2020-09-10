@@ -228,7 +228,7 @@ public class InteractionMenu {
             interactionCounter.put(month, 0);
         }
         String[] rows = interactionDatabase.getAll();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy");
         for (String row : rows) {
             Interaction interaction = Interaction.fromCSV(row);
             Date interactionDate = interaction.getInteractionDate();
@@ -284,7 +284,7 @@ public class InteractionMenu {
         // Add 1 day to end date to include the end date in the calculation
         cEnd.add(Calendar.DATE, 1);
         ArrayList<String> months = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy");
         while (cStart.before(cEnd)) {
             months.add(simpleDateFormat.format(cStart.getTime()));
             cStart.add(Calendar.MONTH, 1);
