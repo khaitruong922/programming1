@@ -6,6 +6,7 @@ import database.Lead;
 import util.DateParser;
 import validator.DateValidator;
 
+import java.awt.geom.FlatteningPathIterator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +17,14 @@ import java.util.HashMap;
 public class InteractionMenu {
     private final Database interactionDatabase = new Database(Interaction.fileName);
     private final Database leadDatabase = new Database(Lead.fileName);
+    private static final InteractionMenu instance = new InteractionMenu();
 
+    private InteractionMenu() {
+
+    }
+    public static InteractionMenu getInstance() {
+        return instance;
+    }
     public void startInteractionMenu() {
         OptionMenu optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all interactions", "1", () -> {
@@ -50,8 +58,7 @@ public class InteractionMenu {
             startInteractionMenu();
         }));
         optionMenu.add(new Option("Back", "7", () -> {
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.startMainMenu();
+            MainMenu.getInstance().startMainMenu();
         }));
         optionMenu.start();
     }
@@ -69,18 +76,17 @@ public class InteractionMenu {
 
     private void addInteraction() {
         String id = Interaction.idPrefix + interactionDatabase.getNextIdNumber();
-        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
+        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ").next(new DateValidator(), "");
         Date interDate = null;
         try {
             interDate = DateParser.parse(interDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String leadId = new InputField("Lead ID: ").next(s -> leadDatabase.hasId(s), "Lead id does not exist.");
+        String leadId = new InputField("Lead ID: ").next(s -> leadDatabase.hasId(s), "Lead ID does not exist.");
         String mean = new InputField("Mean: ").next();
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive) : ")
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
-                        "Invalid input. Please type in 0 or 1 or 2.");
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
         switch (potential) {
             case "0": {
                 potential = "negative";
@@ -108,7 +114,8 @@ public class InteractionMenu {
 
 
     private void updateInteraction() {
-        String id = new InputField("Enter a inter ID to update: ").next();
+        String id = new InputField("Enter an interaction ID to update (leave blank to cancel): ", false).next();
+        if (id.isEmpty()) return;
         if (!interactionDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -117,13 +124,13 @@ public class InteractionMenu {
         String row = interactionDatabase.getRow(id);
         Interaction interaction = Interaction.fromCSV(row);
 
-        System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
+        System.out.println("Below is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
         TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
         tableFormatter.addRow(interaction.toStringArray());
         tableFormatter.display();
 
         String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", false)
-                .next(new DateValidator(), "Invalid date format");
+                .next(new DateValidator(), "");
 
         Date interactionDate = interaction.getInteractionDate();
         try {
@@ -144,8 +151,7 @@ public class InteractionMenu {
         interaction.setMean(mean);
 
         String potential = new InputField("Reaction (0: negative, 1: neutral, 2: positive), enter to skip : ", false)
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"),
-                        "Invalid input. Please type in 0 or 1 or 2 or enter to skip.");
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
         switch (potential) {
             case "0": {
                 potential = "negative";
@@ -179,7 +185,8 @@ public class InteractionMenu {
 
 
     private void deleteInteraction() {
-        String id = new InputField("Enter an interaction ID to delete: ").next();
+        String id = new InputField("Enter an interaction ID to delete (leave blank to cancel): ",false).next();
+        if (id.isEmpty()) return;
         if (!interactionDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -249,7 +256,7 @@ public class InteractionMenu {
     }
 
     private Date askStartDate() {
-        String startDateInput = new InputField("Enter start date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+        String startDateInput = new InputField("Enter start date (yyyy-mm-dd): ").next(new DateValidator(), "");
         Date startDate = null;
         try {
             startDate = DateParser.parse(startDateInput);
@@ -262,7 +269,7 @@ public class InteractionMenu {
     private Date askEndDate(Date startDate) {
         Date endDate = null;
         do {
-            String endDateInput = new InputField("Enter end date (yyyy-mm-dd): ").next(new DateValidator(), "Invalid date format.");
+            String endDateInput = new InputField("Enter end date (yyyy-mm-dd): ").next(new DateValidator(), "");
             try {
                 endDate = DateParser.parse(endDateInput);
             } catch (ParseException e) {

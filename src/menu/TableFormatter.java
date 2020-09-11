@@ -55,7 +55,7 @@ public class TableFormatter {
         System.out.print(" ");
         printMultiple("-", getWidth() - 2);
         System.out.print(" ");
-        System.out.println("");
+        System.out.println();
     }
 
     public int getWidth() {

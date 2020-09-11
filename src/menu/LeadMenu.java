@@ -16,6 +16,15 @@ import java.util.Date;
 public class LeadMenu {
     private final Database leadDatabase = new Database(Lead.fileName);
     private final Database interactionDatabase = new Database(Interaction.fileName);
+    private static final LeadMenu instance = new LeadMenu();
+
+    private LeadMenu() {
+
+    }
+
+    public static LeadMenu getInstance() {
+        return instance;
+    }
 
     public void startLeadMenu() {
         OptionMenu optionMenu = new OptionMenu();
@@ -45,8 +54,7 @@ public class LeadMenu {
             startLeadMenu();
         }));
         optionMenu.add(new Option("Back", "6", () -> {
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.startMainMenu();
+            MainMenu.getInstance().startMainMenu();
         }));
         optionMenu.start();
     }
@@ -64,14 +72,14 @@ public class LeadMenu {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
         String name = new InputField("Name: ").next(new NameValidator(), "Name can only contain characters and spaces only.");
-        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "Invalid date format.");
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "");
         Date birthDate = null;
         try {
             birthDate = DateParser.parse(birthDateInput);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Please type in 0 or 1");
+        String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Invalid input.");
         boolean isMale = genderInput.equals("1");
         String phone = new InputField("Phone (7-12 digits): ").next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
         String email = new InputField("Email: ")
@@ -91,7 +99,8 @@ public class LeadMenu {
     }
 
     private void updateLead() {
-        String id = new InputField("Enter a lead ID to update: ").next();
+        String id = new InputField("Enter a lead ID to update (leave blank to cancel): ",false).next();
+        if (id.isEmpty()) return;
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -100,7 +109,7 @@ public class LeadMenu {
         String row = leadDatabase.getRow(id);
         Lead lead = Lead.fromCSV(row);
 
-        System.out.println("Here is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
+        System.out.println("Below is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
         TableFormatter tableFormatter = new TableFormatter(Lead.fields);
         tableFormatter.addRow(lead.toStringArray());
         tableFormatter.display();
@@ -111,7 +120,7 @@ public class LeadMenu {
         lead.setName(name);
 
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", false)
-                .next(new DateValidator(), "Invalid date format.");
+                .next(new DateValidator(), "");
         Date birthDate = lead.getBirthDate();
         try {
             birthDate = DateParser.parse(birthDateInput);
@@ -120,8 +129,7 @@ public class LeadMenu {
         lead.setBirthDate(birthDate);
 
         String genderInput = new InputField("Gender (0: female, 1: male) : ", false)
-                .next(s -> s.equals("0") || s.equals("1") || s.isEmpty(),
-                        "Invalid input. Please type 0 or 1 or press enter to skip.");
+                .next(s -> s.equals("0") || s.equals("1") || s.isEmpty());
         boolean isMale = lead.isMale();
         if (!genderInput.isEmpty()) {
             isMale = genderInput.equals("1");
@@ -154,7 +162,8 @@ public class LeadMenu {
     }
 
     private void deleteLead() {
-        String id = new InputField("Enter a lead ID to delete: ").next();
+        String id = new InputField("Enter a lead ID to delete (leave blank to cancel): ", false).next();
+        if (id.isEmpty()) return;
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
             return;
@@ -193,8 +202,9 @@ public class LeadMenu {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int date = c.get(Calendar.DATE);
-            Period diff = Period.between(LocalDate.of(year,month+1,date), LocalDate.now());
+            Period diff = Period.between(LocalDate.of(year, month + 1, date), LocalDate.now());
             int age = diff.getYears();
+            // Classify into groups
             if (age < 10) {
                 leadCounts[0] += 1;
                 continue;
@@ -218,7 +228,8 @@ public class LeadMenu {
         tableFormatter.addRow(strLeadCounts);
         tableFormatter.display();
     }
-    private void waitForEnter(){
-        new InputField("Press Enter to continue. ",false).next();
+
+    private void waitForEnter() {
+        new InputField("Press Enter to continue. ", false).next();
     }
 }

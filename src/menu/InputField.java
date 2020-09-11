@@ -18,22 +18,19 @@ public class InputField {
         this.required = required;
     }
 
-    private boolean required = true;
+    private boolean required;
 
     public String next(IValidator validator, String errorMessage) {
         System.out.print(label);
         String input = sc.nextLine();
-        if (!required && input.isEmpty()) {
-            return input;
-        }
+        if (!required && input.isEmpty()) return input;
         if (required && input.isEmpty()) {
             System.out.println("Field is missing.");
             return next(validator, errorMessage);
         }
-        if (validator.validate(input)) {
-            return input;
-        }
-        System.out.println(errorMessage);
+        // Check if the input is valid
+        if (validator.validate(input)) return input;
+        if (!errorMessage.isEmpty()) System.out.println(errorMessage);
         return next(validator, errorMessage);
     }
 

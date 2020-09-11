@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        MainMenu mainMenu = new MainMenu();
-        mainMenu.startMainMenu();
+        MainMenu.getInstance().startMainMenu();
     }
 }
