@@ -86,6 +86,7 @@ public class Lead implements IDatabaseEntity {
 
     public static Lead fromCSV(String row) {
         String[] fields = row.split(",");
+        if (fields.length < Lead.fields.length) return null;
         String id = fields[0];
         String name = fields[1];
         Date birthDate = null;

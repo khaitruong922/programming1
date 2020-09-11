@@ -63,7 +63,9 @@ public class LeadMenu {
         String[] rows = leadDatabase.getAll();
         TableFormatter tableFormatter = new TableFormatter(Lead.fields);
         for (String row : rows) {
-            tableFormatter.addRow(Lead.fromCSV(row).toStringArray());
+            Lead lead = Lead.fromCSV(row);
+            if (lead == null) continue;
+            tableFormatter.addRow(lead.toStringArray());
         }
         tableFormatter.display();
     }
@@ -99,7 +101,7 @@ public class LeadMenu {
     }
 
     private void updateLead() {
-        String id = new InputField("Enter a lead ID to update (leave blank to cancel): ",false).next();
+        String id = new InputField("Enter a lead ID to update (leave blank to cancel): ", false).next();
         if (id.isEmpty()) return;
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
