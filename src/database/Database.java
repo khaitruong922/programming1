@@ -13,7 +13,7 @@ public class Database {
 
     public boolean add(IDatabaseEntity databaseEntity) {
         createFile();
-        FileWriter fileWriter = null;
+        FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(fileName, true);
             fileWriter.write(databaseEntity.toCSV());
@@ -27,7 +27,7 @@ public class Database {
     public boolean update(String id, IDatabaseEntity databaseEntity) {
         createFile();
         String[] rows = getAll();
-        FileWriter fileWriter = null;
+        FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(fileName);
             for (int i = 0; i < rows.length; i++) {
@@ -50,7 +50,7 @@ public class Database {
     public boolean deleteMatch(String s, int columnIndex) {
         createFile();
         String[] rows = getAll();
-        FileWriter fileWriter = null;
+        FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(fileName);
             for (int i = 0; i < rows.length; i++) {
@@ -73,13 +73,15 @@ public class Database {
     }
 
     public String[] getAll() {
-        ArrayList<String> rows = new ArrayList<String>();
+        ArrayList<String> rows = new ArrayList<>();
         File file = createFile();
         try {
             FileReader fileReader = new FileReader(file);
             Scanner sc = new Scanner(fileReader);
             while (sc.hasNextLine()) {
-                rows.add(sc.nextLine());
+                String row = sc.nextLine();
+                if (row.isEmpty()) continue;
+                rows.add(row);
             }
         } catch (FileNotFoundException e) {
             System.out.println(fileName + " not found.");
@@ -122,10 +124,10 @@ public class Database {
                     return row;
                 }
             }
-            return "Row not found";
+            return "";
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "An error occurred";
+            return "";
         }
     }
 
@@ -141,7 +143,7 @@ public class Database {
             return lastRow;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return "An error occurred";
+            return "";
         }
     }
 
