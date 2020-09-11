@@ -60,10 +60,10 @@ public class LeadMenu {
     }
 
     private void viewLeads() {
-        String[] leads = leadDatabase.getAll();
+        String[] rows = leadDatabase.getAll();
         TableFormatter tableFormatter = new TableFormatter(Lead.fields);
-        for (String lead : leads) {
-            tableFormatter.addRow(Lead.fromCSV(lead).toStringArray());
+        for (String row : rows) {
+            tableFormatter.addRow(Lead.fromCSV(row).toStringArray());
         }
         tableFormatter.display();
     }

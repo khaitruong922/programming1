@@ -65,10 +65,10 @@ public class InteractionMenu {
 
 
     private void viewInteractions() {
-        String[] interactions = interactionDatabase.getAll();
+        String[] rows = interactionDatabase.getAll();
         TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
-        for (String interaction : interactions) {
-            tableFormatter.addRow(Interaction.fromCSV(interaction).toStringArray());
+        for (String row : rows) {
+            tableFormatter.addRow(Interaction.fromCSV(row).toStringArray());
         }
         tableFormatter.display();
     }

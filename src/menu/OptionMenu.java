@@ -31,8 +31,7 @@ public class OptionMenu {
                     return;
                 }
             }
-            System.out.println("Invalid input");
+            System.out.println("Invalid input.");
         }
-
     }
 }
