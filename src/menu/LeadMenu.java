@@ -193,7 +193,7 @@ public class LeadMenu {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int date = c.get(Calendar.DATE);
-            Period diff = Period.between(LocalDate.of(year,month,date), LocalDate.now());
+            Period diff = Period.between(LocalDate.of(year,month+1,date), LocalDate.now());
             int age = diff.getYears();
             if (age < 10) {
                 leadCounts[0] += 1;
