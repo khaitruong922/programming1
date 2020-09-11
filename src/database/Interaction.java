@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Interaction implements IDatabaseEntity {
+    public static Interaction example = new Interaction("inter_001", new Date(), "001", "facebook", "negative");
     public static String fileName = "interactions.csv";
     public static String idPrefix = "inter_";
     public static String[] fields = new String[]{"ID", "Interaction date", "Lead ID", "Mean", "Potential"};
@@ -66,7 +67,6 @@ public class Interaction implements IDatabaseEntity {
 
     public static Interaction fromCSV(String row) {
         String[] fields = row.split(",");
-        if (fields.length < Interaction.fields.length) return null;
         String id = fields[0];
         Date interactionDate = null;
         try {
