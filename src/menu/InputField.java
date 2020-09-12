@@ -23,10 +23,6 @@ public class InputField {
         System.out.print(label);
         String input = sc.nextLine();
         if (!required && input.isEmpty()) return input;
-        if (required && input.equals("cancel")){
-            System.out.println("canceling");
-            MainMenu.getInstance().startMainMenu();
-        }
         if (required && input.isEmpty()) {
             System.out.println("Field is missing.");
             return next(validator, errorMessage);
