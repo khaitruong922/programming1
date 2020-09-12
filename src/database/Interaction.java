@@ -66,7 +66,6 @@ public class Interaction implements IDatabaseEntity {
 
     public static Interaction fromCSV(String row) {
         String[] fields = row.split(",");
-        if (fields.length < Interaction.fields.length) return null;
         String id = fields[0];
         Date interactionDate = null;
         try {

@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class InputField {
     private static final Scanner sc = new Scanner(System.in);
     private String label;
+    private boolean required;
 
     public InputField(String label) {
         this.label = label;
@@ -17,8 +18,6 @@ public class InputField {
         this.label = label;
         this.required = required;
     }
-
-    private boolean required;
 
     public String next(IValidator validator, String errorMessage) {
         System.out.print(label);
