@@ -9,7 +9,6 @@ import validator.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -72,7 +71,7 @@ public class LeadMenu {
 
     private void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
-
+        System.out.println("Type cancel to go back to main menu");
         String name = new InputField("Name: ").next(new NameValidator(), "Name can only contain characters and spaces only.");
         String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "");
         Date birthDate = null;
@@ -112,6 +111,7 @@ public class LeadMenu {
         Lead lead = Lead.fromCSV(row);
 
         System.out.println("Below is the data of " + id + ". Please leave the field blank and press Enter to keep the original data.");
+        System.out.println("Type cancel to go back to main menu");
         TableFormatter tableFormatter = new TableFormatter(Lead.fields);
         tableFormatter.addRow(lead.toStringArray());
         tableFormatter.display();
