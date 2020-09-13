@@ -7,7 +7,7 @@ public class MainMenu {
         return instance;
     }
 
-    private OptionMenu optionMenu;
+    private final OptionMenu optionMenu;
 
     private MainMenu() {
         optionMenu = new OptionMenu();
