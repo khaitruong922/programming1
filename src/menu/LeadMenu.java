@@ -14,20 +14,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class LeadMenu {
-    private final Database leadDatabase = new Database(Lead.fileName);
-    private final Database interactionDatabase = new Database(Interaction.fileName);
+
     private static final LeadMenu instance = new LeadMenu();
-
-    private LeadMenu() {
-
-    }
 
     public static LeadMenu getInstance() {
         return instance;
     }
 
-    public void startLeadMenu() {
-        OptionMenu optionMenu = new OptionMenu();
+    private final Database leadDatabase = new Database(Lead.fileName);
+    private final Database interactionDatabase = new Database(Interaction.fileName);
+    private final OptionMenu optionMenu;
+
+    private LeadMenu() {
+        // Create option menu only in first instantiation.
+        optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all leads", "1", () -> {
             viewLeads();
             waitForEnter();
@@ -56,6 +56,9 @@ public class LeadMenu {
         optionMenu.add(new Option("Back", "6", () -> {
             MainMenu.getInstance().startMainMenu();
         }));
+    }
+
+    public void startLeadMenu() {
         optionMenu.start();
     }
 
@@ -71,20 +74,13 @@ public class LeadMenu {
     private void addLead() {
         String id = Lead.idPrefix + leadDatabase.getNextIdNumber();
 
-        String name = new InputField("Name: ").next(new NameValidator(), "Name can only contain characters and spaces only.");
-        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ").next(new DateValidator(), "");
-        Date birthDate = null;
-        try {
-            birthDate = DateParser.parse(birthDateInput);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String genderInput = new InputField("Gender (0: female, 1: male) : ").next(s -> s.equals("0") || s.equals("1"), "Invalid input.");
+        String name = askName(true);
+        Date birthDate = askBirthDate(true);
+        String genderInput = askGender(true);
         boolean isMale = genderInput.equals("1");
-        String phone = new InputField("Phone (7-12 digits): ").next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
-        String email = new InputField("Email: ")
-                .next(new EmailValidator(), "Invalid email format.");
-        String address = new InputField("Address: ").next();
+        String phone = askPhone(true);
+        String email = askEmail(true);
+        String address = askAddress(true);
         Lead lead = new Lead(id, name, birthDate, isMale, phone, email, address);
         if (leadDatabase.add(lead)) {
             System.out.println("Lead added successfully with id " + id);
@@ -98,8 +94,9 @@ public class LeadMenu {
 
     }
 
+
     private void updateLead() {
-        String id = new InputField("Enter a lead ID to update (leave blank to cancel): ",false).next();
+        String id = new InputField("Enter a lead ID to update (leave blank to cancel): ", false).next();
         if (id.isEmpty()) return;
         if (!leadDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
@@ -114,41 +111,23 @@ public class LeadMenu {
         tableFormatter.addRow(lead.toStringArray());
         tableFormatter.display();
 
-        String name = new InputField("Name: ", false)
-                .next(new NameValidator(), "Name can only contain characters and spaces only.");
-        name = !name.isEmpty() ? name : lead.getName();
-        lead.setName(name);
+        String name = askName(false);
+        if (!name.isEmpty()) lead.setName(name);
 
-        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", false)
-                .next(new DateValidator(), "");
-        Date birthDate = lead.getBirthDate();
-        try {
-            birthDate = DateParser.parse(birthDateInput);
-        } catch (ParseException e) {
-        }
-        lead.setBirthDate(birthDate);
+        Date birthDate = askBirthDate(false);
+        if (birthDate != null) lead.setBirthDate(birthDate);
 
-        String genderInput = new InputField("Gender (0: female, 1: male) : ", false)
-                .next(s -> s.equals("0") || s.equals("1") || s.isEmpty());
-        boolean isMale = lead.isMale();
-        if (!genderInput.isEmpty()) {
-            isMale = genderInput.equals("1");
-        }
-        lead.setMale(isMale);
+        String genderInput = askGender(false);
+        if (!genderInput.isEmpty()) lead.setMale(genderInput.equals("1"));
 
-        String phone = new InputField("Phone: ", false)
-                .next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
-        phone = !phone.isEmpty() ? phone : lead.getPhone();
-        lead.setPhone(phone);
+        String phone = askPhone(false);
+        if (!phone.isEmpty()) lead.setPhone(phone);
 
-        String email = new InputField("Email: ", false)
-                .next(new EmailValidator(), "Invalid email format.");
-        email = !email.isEmpty() ? email : lead.getEmail();
-        lead.setEmail(email);
+        String email = askEmail(false);
+        if (!email.isEmpty()) lead.setEmail(email);
 
-        String address = new InputField("Address: ", false).next();
-        address = !address.isEmpty() ? address : lead.getAddress();
-        lead.setAddress(address);
+        String address = askAddress(false);
+        if (!address.isEmpty()) lead.setAddress(address);
 
         if (leadDatabase.update(id, lead)) {
             System.out.println("Update " + id + " successfully.");
@@ -190,6 +169,7 @@ public class LeadMenu {
         System.out.println("Error occurred when deleting a lead.");
     }
 
+
     private void viewLeadsByAge() {
         String[] rows = leadDatabase.getAll();
         String[] labels = new String[]{"0-10", "10-20", "20-60", "60+"};
@@ -227,6 +207,46 @@ public class LeadMenu {
         TableFormatter tableFormatter = new TableFormatter(labels);
         tableFormatter.addRow(strLeadCounts);
         tableFormatter.display();
+    }
+
+    private String askGender(boolean required) {
+        return new InputField("Gender (0: female, 1: male) : ", required)
+                .next(s -> s.equals("0") || s.equals("1"));
+    }
+
+    private String askName(boolean required) {
+        return new InputField("Name: ", required)
+                .next(new NameValidator(), "Name can only contain characters and spaces only.");
+    }
+
+    private String askPhone(boolean required) {
+        return new InputField("Phone: ", required)
+                .next(new PhoneValidator(), "Phone can only contain 7 to 12 digits only.");
+    }
+
+    private String askEmail(boolean required) {
+        return new InputField("Email: ", required)
+                .next(new EmailValidator(), "Invalid email format.");
+    }
+
+    private String askAddress(boolean required) {
+        return new InputField("Address: ", required).next();
+    }
+
+    private Date askBirthDate(boolean required) {
+        String birthDateInput = new InputField("Birth Date (YYYY-MM-DD): ", required)
+                .next(new DateValidator(), "");
+
+        // This only runs when field is not required
+        if (birthDateInput.isEmpty()) return null;
+
+        Date birthDate = null;
+        try {
+            birthDate = DateParser.parse(birthDateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return birthDate;
     }
 
     private void waitForEnter() {

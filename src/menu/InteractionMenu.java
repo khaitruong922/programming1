@@ -15,18 +15,18 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class InteractionMenu {
-    private final Database interactionDatabase = new Database(Interaction.fileName);
-    private final Database leadDatabase = new Database(Lead.fileName);
     private static final InteractionMenu instance = new InteractionMenu();
 
-    private InteractionMenu() {
-
-    }
     public static InteractionMenu getInstance() {
         return instance;
     }
-    public void startInteractionMenu() {
-        OptionMenu optionMenu = new OptionMenu();
+
+    private final Database interactionDatabase = new Database(Interaction.fileName);
+    private final Database leadDatabase = new Database(Lead.fileName);
+    private final OptionMenu optionMenu;
+
+    private InteractionMenu() {
+        optionMenu = new OptionMenu();
         optionMenu.add(new Option("View all interactions", "1", () -> {
             viewInteractions();
             waitForEnter();
@@ -60,9 +60,11 @@ public class InteractionMenu {
         optionMenu.add(new Option("Back", "7", () -> {
             MainMenu.getInstance().startMainMenu();
         }));
-        optionMenu.start();
     }
 
+    public void startInteractionMenu() {
+        optionMenu.start();
+    }
 
     private void viewInteractions() {
         String[] rows = interactionDatabase.getAll();
@@ -73,35 +75,14 @@ public class InteractionMenu {
         tableFormatter.display();
     }
 
-
     private void addInteraction() {
         String id = Interaction.idPrefix + interactionDatabase.getNextIdNumber();
-        String interDateInput = new InputField("Interaction Date (YYYY-MM-DD): ").next(new DateValidator(), "");
-        Date interDate = null;
-        try {
-            interDate = DateParser.parse(interDateInput);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String leadId = new InputField("Lead ID: ").next(s -> leadDatabase.hasId(s), "Lead ID does not exist.");
-        String mean = new InputField("Mean: ").next();
-        String potential = new InputField("Potential (0: negative, 1: neutral, 2: positive) : ")
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
-        switch (potential) {
-            case "0": {
-                potential = "negative";
-                break;
-            }
-            case "1": {
-                potential = "neutral";
-                break;
-            }
-            case "2": {
-                potential = "positive";
-                break;
-            }
-        }
-        Interaction interaction = new Interaction(id, interDate, leadId, mean, potential);
+        Date interactionDate = askInteractionDate(true);
+        String leadId = askLeadId(true);
+        String mean = askMean(true);
+        String potential = askPotential(true);
+        Interaction interaction = new Interaction(id, interactionDate, leadId, mean, potential);
+
         if (interactionDatabase.add(interaction)) {
             System.out.println("Interaction added successfully with id " + id);
             TableFormatter tableFormatter = new TableFormatter(Interaction.fields);
@@ -111,7 +92,6 @@ public class InteractionMenu {
         }
         System.out.println("Error occurred when adding an interaction.");
     }
-
 
     private void updateInteraction() {
         String id = new InputField("Enter an interaction ID to update (leave blank to cancel): ", false).next();
@@ -129,48 +109,17 @@ public class InteractionMenu {
         tableFormatter.addRow(interaction.toStringArray());
         tableFormatter.display();
 
-        String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", false)
-                .next(new DateValidator(), "");
+        Date interactionDate = askInteractionDate(false);
+        if (interactionDate != null) interaction.setInteractionDate(interactionDate);
 
-        Date interactionDate = interaction.getInteractionDate();
-        try {
-            interactionDate = DateParser.parse(interactionDateInput);
-        } catch (ParseException e) {
-        }
+        String leadId = askLeadId(false);
+        if (!leadId.isEmpty()) interaction.setLeadId(leadId);
 
-        interaction.setInteractionDate(interactionDate);
+        String mean = askMean(false);
+        if (!mean.isEmpty()) interaction.setMean(mean);
 
-        String leadId = new InputField("Enter lead ID: ", false)
-                .next(s -> leadDatabase.hasId(s),
-                        "Lead ID does not exist");
-        leadId = !leadId.isEmpty() ? leadId : interaction.getLeadId();
-        interaction.setLeadId(leadId);
-
-        String mean = new InputField("Mean: ", false).next();
-        mean = !mean.isEmpty() ? mean : interaction.getMean();
-        interaction.setMean(mean);
-
-        String potential = new InputField("Potential (0: negative, 1: neutral, 2: positive), enter to skip : ", false)
-                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
-        switch (potential) {
-            case "0": {
-                potential = "negative";
-                break;
-            }
-            case "1": {
-                potential = "neutral";
-                break;
-            }
-            case "2": {
-                potential = "positive";
-                break;
-            }
-            default: {
-                potential = interaction.getPotential();
-                break;
-            }
-        }
-        interaction.setPotential(potential);
+        String potential = askPotential(false);
+        if (!potential.isEmpty()) interaction.setPotential(potential);
 
         if (interactionDatabase.update(id, interaction)) {
             System.out.println("Update " + id + " successfully.");
@@ -183,9 +132,8 @@ public class InteractionMenu {
         System.out.println("Error occurred when updating a lead.");
     }
 
-
     private void deleteInteraction() {
-        String id = new InputField("Enter an interaction ID to delete (leave blank to cancel): ",false).next();
+        String id = new InputField("Enter an interaction ID to delete (leave blank to cancel): ", false).next();
         if (id.isEmpty()) return;
         if (!interactionDatabase.hasId(id)) {
             System.out.println(id + " does not exist.");
@@ -197,7 +145,6 @@ public class InteractionMenu {
         }
         System.out.println("Error occurred when deleting a lead.");
     }
-
 
     private void viewInteractionsByPotential() {
         Date startDate = askStartDate();
@@ -222,7 +169,6 @@ public class InteractionMenu {
         tableFormatter.addRow(new String[]{"Negative", Integer.toString(potentialCounter.get("negative"))});
         tableFormatter.addRow(new String[]{"Neutral", Integer.toString(potentialCounter.get("neutral"))});
         tableFormatter.addRow(new String[]{"Positive", Integer.toString(potentialCounter.get("positive"))});
-
         tableFormatter.display();
     }
 
@@ -255,6 +201,67 @@ public class InteractionMenu {
         tableFormatter.display();
     }
 
+    private String[] getMonthsBetweenTwoDates(Date start, Date end) {
+        Calendar cStart = Calendar.getInstance();
+        cStart.setTime(start);
+        Calendar cEnd = Calendar.getInstance();
+        cEnd.setTime(end);
+        // Add 1 day to end date to include the end date in the calculation
+        cEnd.add(Calendar.DATE, 1);
+        ArrayList<String> months = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy");
+        while (cStart.before(cEnd)) {
+            months.add(simpleDateFormat.format(cStart.getTime()));
+            cStart.add(Calendar.MONTH, 1);
+            cStart.set(Calendar.DAY_OF_MONTH, 1);
+        }
+        return months.toArray(new String[months.size()]);
+    }
+
+    private Date askInteractionDate(boolean required) {
+        String interactionDateInput = new InputField("Interaction Date (YYYY-MM-DD): ", required)
+                .next(new DateValidator(), "");
+
+        // This only runs when field is not required
+        if (interactionDateInput.isEmpty()) return null;
+
+        Date interactionDate = null;
+        try {
+            interactionDate = DateParser.parse(interactionDateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return interactionDate;
+    }
+
+    private String askLeadId(boolean required) {
+        return new InputField("Enter lead ID: ", required)
+                .next(s -> leadDatabase.hasId(s),
+                        "Lead ID does not exist");
+    }
+
+    private String askMean(boolean required) {
+        return new InputField("Mean: ", required).next();
+    }
+
+    private String askPotential(boolean required) {
+        String potentialInput = new InputField("Potential (0: negative, 1: neutral, 2: positive): ", required)
+                .next(s -> s.equals("0") || s.equals("1") || s.equals("2"));
+        return inputToPotential(potentialInput);
+    }
+
+    private String inputToPotential(String input) {
+        switch (input) {
+            case "0":
+                return "negative";
+            case "1":
+                return "neutral";
+            case "2":
+                return "positive";
+        }
+        return "";
+    }
+
     private Date askStartDate() {
         String startDateInput = new InputField("Enter start date (yyyy-mm-dd): ").next(new DateValidator(), "");
         Date startDate = null;
@@ -281,23 +288,6 @@ public class InteractionMenu {
         }
         while (endDate.getTime() < startDate.getTime());
         return endDate;
-    }
-
-    private String[] getMonthsBetweenTwoDates(Date start, Date end) {
-        Calendar cStart = Calendar.getInstance();
-        cStart.setTime(start);
-        Calendar cEnd = Calendar.getInstance();
-        cEnd.setTime(end);
-        // Add 1 day to end date to include the end date in the calculation
-        cEnd.add(Calendar.DATE, 1);
-        ArrayList<String> months = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM yyyy");
-        while (cStart.before(cEnd)) {
-            months.add(simpleDateFormat.format(cStart.getTime()));
-            cStart.add(Calendar.MONTH, 1);
-            cStart.set(Calendar.DAY_OF_MONTH, 1);
-        }
-        return months.toArray(new String[months.size()]);
     }
 
     private void waitForEnter() {
