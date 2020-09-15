@@ -230,7 +230,7 @@ public class LeadMenu {
     }
 
     private String askAddress(boolean required) {
-        return new InputField("Address: ", required).next();
+        return new InputField("Address: ", required).next(new NoCommaValidator(),"Comma is not allowed.");
     }
 
     private Date askBirthDate(boolean required) {

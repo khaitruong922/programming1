@@ -1,42 +1,17 @@
-lead_015,namei,2004-02-05,false,123233424,nami@gmail.com,142 nge
-lead_016,nameii,0003-03-03,true,1238493,nameii@hotmail.vn,143 ho chi minh
-lead_017,nameiii,2000-09-21,true,12987465,name123@yahoo.com,ho chi minh city 123 nguyen van linh
-lead_018,nameiV,1945-09-20,true,12324323,nameiv123@gmail.com,165A Ton Duc Thang
-lead_019,nameV,1960-07-21,true,092353452,namev@gmail.edu.au,1A6 Cao Thang ho chi minh
-lead_020,namevi,1956-02-01,true,09123652,namevi@gmail.com.au,109 cong hoa 
-lead_021,chogath,2020-03-03,true,0957424523,riot@gmail.com.vn,758A pasteur ho chi minh city
-lead_022,sona,1989-01-19,false,094652125,muted@gmail.com,12A ho chi minh city
-lead_023,namevi,1975-12-03,true,09375732,tasdwas@gmail.com,123A nguyen van linh ho chi minh city
-lead_024,hanzo,1997-09-10,true,091262412,hanzo@gmail.com,1A2
-lead_025,tasdws,1999-12-19,true,09247214,tasds@gmail.co.uk,world
-lead_026,namex,1998-01-25,true,097362742,nameX@hotmail.hk,world
-lead_027,namexi,2014-01-20,false,0912367123,namexi@gmail.com.uk,1B29
-lead_028,namexii,1987-02-18,false,09274124,namexii@yahoo.hk,1A29
-lead_029,namexiii,1970-02-13,true,0936238782,namexiii@hotmail.com.uk.vn,104 ho chi minh city
-lead_030,namexiv,2008-10-23,true,097129874,namexiv@gmail.com.uk,1A874 london
-lead_031,namexv,2003-09-12,false,09123757,namexv@hotmail.com.vn,12A48 london canada
-lead_032,namexvi,1989-07-14,false,0946523,namexvi@hotmail.hk,hong kong 1a23
-lead_033,namexvii,2000-12-30,false,091246123,namexvii@gmail.com,czech 
-lead_034,namexviii,1999-01-02,true,0921636412,namexviii@hotmail.com.hk,1B23 da nang
-lead_036,skarner,0001-01-11,false,091236523,skarner@hotmail.su,desert
-lead_037,scaner,1951-01-21,true,091236523,skatxdverner@hotmail.su,desert
-lead_038,skarner,1941-08-31,true,091336523,skarasaxcner@hotmail.su,ho chi minh city 123 nguyen van linh
-lead_039,shellor,1961-01-23,true,091256523,skarnezxfer@hotmail.su,12A48 london canada
-lead_040,skarner,1971-03-23,false,091276523,skarnasver@hotmail.su,ho chi minh city 123 nguyen van linh desert
-lead_041,skaarner,1991-02-15,true,091236823,skarnwq2er@hotmail.su,world
-lead_042,nameixcw,1651-06-06,false,091239523,skarsddvner@hotmail.su,desert
-lead_043,anewname,1781-02-07,true,091233453,sksdfearner@hotmail.su,ho chi minh city 123 nguyen van linh
-lead_044,nameiiiiiiii,1978-03-17,false,091336523,skarner@hotmail.su,12A48 london canada
-lead_045,namec,1978-06-18,true,091232523,skar412@hotmail.su,desert
-lead_046,namel,1969-02-25,true,091236523,skaasdf@hotmail.su,desert
-lead_047,namelk,1991-10-19,true,091232253,skarnasdwer@hotmail.su,desert
-lead_048,skarner,1996-01-31,false,091236523,skarascner@hotmail.vn,ho chi minh city 123 nguyen van linh
-lead_049,skaikashrner,1991-11-11,true,091236233,skarnqwer@hotmail.com,desert
-lead_050,skajgnasdwrner,1996-05-27,true,092352323,skarng7346345frder@hotmail.hk,desert
-lead_051,skasdwasdwrner,1996-06-30,true,091223632,skarn345346gfrder@hotmail.hk,desert
-lead_052,skajgnacxzener,1976-03-17,false,091245323,skarngf34534rder@hotmail.hk,ho chi minh city 123 nguyen van linh
-lead_053,skajgnasxzcner,1966-07-27,true,091765363,skarngfr23445der@hotmail.hk,desert
-lead_054,skaasjhrdwrner,1986-06-23,true,091245323,skarngf12125rder@hotmail.hk,ho chi minh city 123 nguyen van linh
-lead_055,skajgfgjgwrner,1956-12-15,false,091347323,skar123ngfrder@hotmail.hk,ho chi minh city 123 nguyen van linh
-lead_056,skajgfgbnyrner,1976-12-16,true,091312456,skasxfje2er@hotmail.hk,desert
-lead_057,skajgnadfghter,1964-11-27,true,093547323,skar34523ngfrder@hotmail.hk,desrt
+lead_001,Khai Truong,2001-09-22,true,0908321238,khai@gmail.com,99 Pasteur
+lead_002,Tin Huynh,2001-02-05,true,0928321238,tin@gmail.com,99 Ton Duc Thang
+lead_003,Apple,2004-02-05,true,0938321238,nami@gmail.com,1422 Tran Hung Dao
+lead_004,Banana,1957-02-05,false,0902321238,nami@gmail.com,1142 Tran Hung Dao
+lead_005,Khai,1997-02-05,false,0908323238,nami@gmail.com,1442 Tran Hung Dao
+lead_006,Tin,2005-02-05,false,0908321538,nami@gmail.com,1432 Nguyen Van Linh
+lead_007,Name,2003-02-05,false,0901321238,nami@gmail.com,1422 Tran Hung Dao
+lead_007,Your Name,2004-02-05,false,0905321238,your@gmail.com,1412 Nguyen Van Linh
+lead_008,My Name,2000-02-05,false,0908331238,my@gmail.com,1642 Tran Hung Dao
+lead_009,His Name,2007-02-05,false,0908421238,his@gmail.com,1542 Nguyen Van Linh
+lead_015,Her Name,2008-02-05,false,0908321228,her@gmail.com,1342 Nguyen Van Linh
+lead_016,Whatever Name,0003-03-03,true,0908321235,whatever@hotmail.vn,143 Nguyen Trai
+lead_020,Lee Sin,1956-02-01,true,0908321237,lee@gmail.com,109 Nguyen Trai
+lead_021,Yasuo,2020-03-03,true,0957424523,ys@gmail.com,758A Nguyen Trai
+lead_022,Zed,1989-01-19,false,094652125,zed@gmail.com,12A Nguyen Trai
+lead_023,Rengar,1975-12-03,true,09375732,rengar@gmail.com,123A Nguyen Trai
+lead_024,Akali,1997-09-10,true,091262412,akali@gmail.com,House

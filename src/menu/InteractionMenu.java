@@ -5,6 +5,7 @@ import database.Interaction;
 import database.Lead;
 import util.DateParser;
 import validator.DateValidator;
+import validator.NoCommaValidator;
 
 import java.awt.geom.FlatteningPathIterator;
 import java.text.ParseException;
@@ -241,7 +242,7 @@ public class InteractionMenu {
     }
 
     private String askMean(boolean required) {
-        return new InputField("Mean: ", required).next();
+        return new InputField("Mean: ", required).next(new NoCommaValidator(), "Comma is not allowed.");
     }
 
     private String askPotential(boolean required) {
