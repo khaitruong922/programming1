@@ -29,6 +29,7 @@ public class InputField {
         }
         // Check if the input is valid
         if (validator.validate(input)) return input;
+        // Print error message and ask the user to type again if it is not valid
         if (!errorMessage.isEmpty()) System.out.println(errorMessage);
         return next(validator, errorMessage);
     }
