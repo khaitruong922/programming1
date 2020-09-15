@@ -1,7 +1,6 @@
 lead_001,Khai Truong,2001-09-22,true,0908321238,khai@gmail.com,99 Pasteur
 lead_002,Tin Huynh,2001-02-05,true,0928321238,tin@gmail.com,99 Ton Duc Thang
 lead_003,Apple,2004-02-05,true,0938321238,nami@gmail.com,1422 Tran Hung Dao
-lead_004,Banana,1957-02-05,false,0902321238,nami@gmail.com,1142 Tran Hung Dao
 lead_005,Khai,1997-02-05,false,0908323238,nami@gmail.com,1442 Tran Hung Dao
 lead_006,Tin,2005-02-05,false,0908321538,nami@gmail.com,1432 Nguyen Van Linh
 lead_007,Name,2003-02-05,false,0901321238,nami@gmail.com,1422 Tran Hung Dao
@@ -15,3 +14,4 @@ lead_021,Yasuo,2020-03-03,true,0957424523,ys@gmail.com,758A Nguyen Trai
 lead_022,Zed,1989-01-19,false,094652125,zed@gmail.com,12A Nguyen Trai
 lead_023,Rengar,1975-12-03,true,09375732,rengar@gmail.com,123A Nguyen Trai
 lead_024,Akali,1997-09-10,true,091262412,akali@gmail.com,House
+lead_025,Khai Truong,2001-09-22,true,0908321238,khaitruong922@gmail.com,165 Tran Hung Dao

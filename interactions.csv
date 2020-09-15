@@ -1,12 +1,8 @@
-inter_002,2020-01-20,lead_004,facebook,negative
 inter_003,2020-06-01,lead_001,facebook,neutral
 inter_004,2020-06-01,lead_001,phone,neutral
-inter_005,2020-05-15,lead_004,twitter,positive
-inter_006,2020-05-01,lead_004,facebook,negative
 inter_007,2020-04-15,lead_002,phone,negative
-inter_008,2020-04-17,lead_004,twitter,neutral
 inter_009,2020-04-15,lead_020,phone,negative
 inter_010,2020-04-17,lead_016,twitter,neutral
-inter_011,2020-04-15,lead_017,phone,negative
 inter_012,2020-04-17,lead_018,twitter,neutral
 inter_013,2001-09-22,lead_019,twitter,positive
+inter_014,2020-01-05,lead_025,facebook,negative
