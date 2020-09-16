@@ -5,7 +5,6 @@ import validator.IValidator;
 import java.util.Scanner;
 
 public class InputField {
-    private static final Scanner sc = new Scanner(System.in);
     private String label;
     private boolean required;
 
@@ -21,6 +20,7 @@ public class InputField {
 
     public String next(IValidator validator, String errorMessage) {
         System.out.print(label);
+        Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         if (!required && input.isEmpty()) return input;
         if (required && input.isEmpty()) {
