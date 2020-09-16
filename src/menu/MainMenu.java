@@ -3,16 +3,14 @@ package menu;
 public class MainMenu {
     private static final MainMenu instance = new MainMenu();
 
-    private MainMenu() {
-
-    }
-
     public static MainMenu getInstance() {
         return instance;
     }
 
-    public void startMainMenu() {
-        OptionMenu optionMenu = new OptionMenu();
+    private final OptionMenu optionMenu;
+
+    private MainMenu() {
+        optionMenu = new OptionMenu();
         optionMenu.add(new Option("Lead Menu", "1", () -> {
             LeadMenu.getInstance().startLeadMenu();
         }));
@@ -22,6 +20,9 @@ public class MainMenu {
         optionMenu.add(new Option("Exit", "3", () -> {
             System.out.println("Program exit.");
         }));
+    }
+
+    public void startMainMenu() {
         optionMenu.start();
     }
 }
