@@ -301,6 +301,6 @@ public class InteractionMenu {
     }
 
     private void waitForEnter() {
-        new InputField("Press Enter to continue. ", false).next();
+        new InputField("Press Enter to continue.", false).next();
     }
 }
