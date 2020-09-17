@@ -3,11 +3,11 @@ inter_004,2020-06-01,lead_001,phone,neutral
 inter_007,2020-04-15,lead_002,phone,negative
 inter_009,2020-04-15,lead_020,phone,negative
 inter_010,2020-04-17,lead_016,twitter,neutral
-inter_012,2020-04-17,lead_018,twitter,neutral
-inter_013,2001-09-22,lead_019,twitter,positive
+inter_012,2020-04-17,lead_016,twitter,neutral
+inter_013,2001-09-22,lead_016,twitter,positive
 inter_014,2020-01-05,lead_025,facebook,negative
-inter_015,2020-04-17,lead_018,phone,positive
-inter_016,2020-08-22,lead_019,phone,negative
+inter_015,2020-04-17,lead_016,phone,positive
+inter_016,2020-08-22,lead_016,phone,negative
 inter_017,2020-01-05,lead_025,phone,negative
 inter_018,2020-01-05,lead_025,facebook,positive
 inter_019,2020-04-17,lead_001,phone,positive
